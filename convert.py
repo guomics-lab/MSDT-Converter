@@ -22,18 +22,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# TODO:
-# generate_rawspectrum:
-#     1. mzml2rawspectrum
-#     2. tims2rawspectrum
-# generate_msdt:
-#     1. sage + rawspectrum -> msdt
-#     2. fp + rawspectrum -> msdt
-# convert2msdt:
-#     1. mgf -> msdt
-#     2. mzIdentML -> msdt
-
-
 parser = argparse.ArgumentParser()
 parser.add_argument('-config', type=str, default="", help="convert config json")
 args = parser.parse_args()

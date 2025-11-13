@@ -8,7 +8,7 @@ import sys
 # Configure logger (accessible by caller)
 logger = logging.getLogger(__name__)
 
-# MGF模板（调整格式对齐）
+# mgf template
 mgf_template = """BEGIN IONS
 TITLE={title}
 PEPMASS={pepmass}
@@ -61,12 +61,12 @@ def msdt2mgf(param):
                     pepmass=row['precursor_mz'],
                     charge=str(int(row['charge'])) + '+',
                     scan=row['scan'],
-                    rt=row['rt'] * 60,  # 分钟转秒,后续待完善
+                    rt=row['rt'] * 60,  # minutes to seconds
                     seq=row['precursor_sequence'],
                     label=row['label'],
                     protein=row['proteins'],
                     spectrum="\n".join(
-                        f"{mz:.4f} {intensity:.2f}"  # 控制输出精度
+                        f"{mz:.4f} {intensity:.2f}"  # control output precision
                         for mz, intensity in zip(
                             row['mz_array'], 
                             row['intensity_array']

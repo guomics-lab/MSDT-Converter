@@ -125,7 +125,7 @@ def gen_mzml_fragpipe_msdt(raw_data_path, fp_pin_path, output_path, unify_residu
         raw_df['mz_array'] = raw_df['mz_array'].str.split(',').map(lambda x: np.array(x, dtype='float32'))
         raw_df['intensity_array'] = raw_df['intensity_array'].str.split(',').map(lambda x: np.array(x, dtype='float32'))
 
-        # 读取并处理fp_sr decoy
+        # read fp_sr decoy
         need_cols = ['SpecId', 'Label', 'ScanNr', 'ExpMass', 'retentiontime', 'rank', 'isotope_errors', 'hyperscore', 'delta_hyperscore', 'matched_ion_num', 'ion_series', 'unweighted_spectral_entropy', 'delta_RT_loess', 'Peptide', 'Proteins']
         fp_sr_df = pd.read_csv(fp_pin_path, sep='\t',usecols=need_cols)
         fp_sr_df = fp_sr_df.rename(columns={'ScanNr': 'scan', 'Label':'label', 'Proteins': 'proteins'})
