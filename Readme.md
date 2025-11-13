@@ -1,10 +1,15 @@
-# 📦 MassNet-DDA-Convert Docker Image
+# 📦 MSDT-Converter Docker Image
 
-This repository provides a self-contained **Docker image** that encapsulates all necessary environments and dependencies for the MassNet-DDA conversion utility. By using this image, users can quickly launch the tool without complex setup.
+This repository provides a self-contained **Docker image** that encapsulates all necessary environments and dependencies
+for the MassNet-DDA conversion utility. By using this image, users can quickly launch the tool without complex setup.
 
-## 🚀 Quick Start Guide
+# 🚀 Quick Start Guide
 
-This image is distributed as a compressed archive (`.tar` file). Simply load the image and run the container, mounting your working directory to access your data and configuration file.
+## Environment Setup
+
+We provide both Docker and Conda set-up guide, user can choose between option A: Docker and option B: Conda below:
+
+## Option A: Docker
 
 ### Prerequisites
 
@@ -14,56 +19,103 @@ This image is distributed as a compressed archive (`.tar` file). Simply load the
 
 ### 💻 1. Windows
 
-The process involves **pulling the image from Docker Hub** and then running a container, mapping your local data directory to the container's working directory.
+The process involves **pulling the image from Docker Hub** and then running a container, mapping your local data
+directory to the container's working directory.
 
-1.  **Open Docker Desktop.** Ensure the Docker engine is running.
-2.  **Pull the Docker Image** from the registry using your command line (e.g., PowerShell or Command Prompt):
-    ```bash
-    docker pull guomics2017/massnet-dda-convert:v1.0
-    ```
-3.  **Run the Container** by mounting your local working directory (`D:\Work\MassNet-DDA` in this example) to the container's internal data path (`/home/test_data`) and specifying the path to your configuration file (`config.json`):
-    ```bash
-    docker run --rm -v "D:\Work\MassNet-DDA":/home/test_data guomics2017/massnet-dda-convert:v1.0 -config=/home/test_data/config.json
-    ```
-    * **Note:** The `-v` flag maps your local directory to the container. The paths must be adjusted according to your actual setup.
+1. **Open Docker Desktop.** Ensure the Docker engine is running.
+2. **Pull the Docker Image** from the registry using your command line (e.g., PowerShell or Command Prompt):
+   ```bash
+   docker pull guomics2017/msdt-converter:v1.0
+   ```
+3. **Run the Container** by mounting your local working directory (`D:\Work\MassNet-DDA` in this example) to the
+   container's internal data path (`/home/test_data`) and specifying the path to your configuration file (
+   `config.json`):
+   ```bash
+   docker run --rm -v "D:\Work\MassNet-DDA":/home/test_data guomics2017/msdt-converter:v1.0 -config=/home/test_data/config.json
+   ```
+    * **Note:** The `-v` flag maps your local directory to the container. The paths must be adjusted according to your
+      actual setup.
 
 ---
 
 ### 🐧 2. Linux
 
-The process involves **pulling the image from Docker Hub** and then running a container, mapping your local data directory to the container's working directory.
+The process involves **pulling the image from Docker Hub** and then running a container, mapping your local data
+directory to the container's working directory.
 
-1.  **Ensure the Docker service is running.**
-2.  **Pull the Docker Image** from the registry in your terminal:
-    ```bash
-    docker pull guomics2017/massnet-dda-convert:v1.0
-    ```
-3.  **Run the Container** (Example using a typical Linux absolute path):
-    ```bash
-    docker run --rm -v /home/user/MassNet-DDA:/home/test_data guomics2017/massnet-dda-convert:v1.0 -config=/home/test_data/config.json
-    ```
+1. **Ensure the Docker service is running.**
+2. **Pull the Docker Image** from the registry in your terminal:
+   ```bash
+   docker pull guomics2017/msdt-converter:v1.0
+   ```
+3. **Run the Container** (Example using a typical Linux absolute path):
+   ```bash
+   docker run --rm -v /home/user/MassNet-DDA:/home/test_data guomics2017/msdt-converter:v1.0 -config=/home/test_data/config.json
+   ```
 
 ---
 
 ### 🍎 3. macOS
 
-The process involves **pulling the image from Docker Hub** and then running a container, mapping your local data directory to the container's working directory.
+The process involves **pulling the image from Docker Hub** and then running a container, mapping your local data
+directory to the container's working directory.
 
-1.  **Open Docker Desktop.** Ensure the Docker engine is running.
-2.  **Pull the Docker Image** from the registry in your terminal:
-    ```bash
-    docker pull guomics2017/massnet-dda-convert:v1.0
-    ```
-3.  **Run the Container** (Example using a typical macOS path):
-    ```bash
-    docker run --rm -v /Users/yourname/Documents/MassNet-DDA:/home/test_data guomics2017/massnet-dda-convert:v1.0 -config=/home/test_data/config.json
-    ```
+1. **Open Docker Desktop.** Ensure the Docker engine is running.
+2. **Pull the Docker Image** from the registry in your terminal:
+   ```bash
+   docker pull guomics2017/msdt-converter:v1.0
+   ```
+3. **Run the Container** (Example using a typical macOS path):
+   ```bash
+   docker run --rm -v /Users/yourname/Documents/MassNet-DDA:/home/test_data guomics2017/msdt-converter:v1.0 -config=/home/test_data/config.json
+   ```
+
+## Option B: Conda
+
+### Prerequisites
+
+Download jdk11 from [here](https://guomics-share.oss-cn-shanghai.aliyuncs.com/SOFTWARE/MSDT-Converter/jdk-11.0.26.zip),
+unzip and move to project root directory.
+> **⚠️Note**: The jdk is from Oracle, we only provide the jdk for download easy.
+
+Download FragPipe
+from [here](https://guomics-share.oss-cn-shanghai.aliyuncs.com/SOFTWARE/MSDT-Converter/FragPipe-21.1.zip), unzip and
+move to project root directory.
+> **⚠️Note**: The FragPipe is from https://github.com/Nesvilab/FragPipe, we only provide the FragPipe for download easy.
+The version contain some plugins.
+
+Create a new conda environment first:
+
+```
+conda create --name msdt-converter python=3.13
+```
+
+This will create an anaconda environment
+
+Activate this environment by running:
+
+```
+conda activate msdt-converter
+```
+
+then install dependencies:
+
+```
+pip install -r ./requirements.txt
+```
+
+### Run the script:
+
+```bash
+python convert.py -config=/home/test_data/config.json
+```
 
 ---
 
 ## ⚙️ Configuration File (`config.json`)
 
-The container requires a single **JSON configuration file** to define which steps to execute and to specify all necessary input, output, and processing parameters.
+The container requires a single **JSON configuration file** to define which steps to execute and to specify all
+necessary input, output, and processing parameters.
 
 ---
 
