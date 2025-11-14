@@ -1,0 +1,58 @@
+{
+    "database": {
+        "bucket_size": 100000,
+        "fragment_min_mz": 150.0,
+        "fragment_max_mz": 1500.0,
+        "enzyme": {
+            "missed_cleavages": 2,
+            "min_len": 7,
+            "max_len": 50,
+            "cleave_at": "KR",
+            "restrict": "P"
+        },
+        "static_mods": {
+            "C": 57.0216
+        },
+        "variable_mods": {
+            "M": [
+                15.9949
+            ],
+            "[": [
+                42.0
+            ]
+        },
+        "max_variable_mods": 3,
+        "decoy_tag": "rev_",
+        "generate_decoys": true,
+        "fasta": "/home/test_data/2_generate_sage_search_result/Homo_sapiens_reviewed.fasta"
+    },
+    "deisotope": true,
+    "chimera": false,
+    "min_matched_peaks": 4,
+    "max_fragment_charge": 2,
+    "report_psms": 10,
+    "precursor_tol": {
+        "ppm": [
+            -20,
+            20
+        ]
+    },
+    "fragment_tol": {
+        "ppm": [
+            -20,
+            20
+        ]
+    },
+    "precursor_charge": [
+        2,
+        5
+    ],
+    "isotope_errors": [
+        0,
+        2
+    ],
+    "mzml_paths": [
+        "/home/test_data/1_generate_rawspectrum/A180430_jiazj_CRC_DDA_ingel_3D.mzML"
+    ],
+    "output_directory": "/home/test_data/2_generate_sage_search_result"
+}
