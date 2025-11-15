@@ -8,9 +8,9 @@ import re
 # Configure logger
 logger = logging.getLogger(__name__)
 
-deal_mzml_rawspectrum = "../linux_mzml_rawspectrum"
-deal_tims_rawspectrum = "../linux_d_rawspectrum"
-deal_wiff_rawspectrum = "../wiff_mzml_rawspecturm"
+deal_mzml_rawspectrum = "./linux_mzml_rawspectrum"
+deal_tims_rawspectrum = "./linux_d_rawspectrum"
+deal_wiff_rawspectrum = "./wiff_mzml_rawspecturm"
 
 residues_sage = {
     'C[+57.0216]': 'C[57.02]',
@@ -45,11 +45,9 @@ def clean_psm_func(peptide, residues_dict):
     
 def change_wiff_scan(right_scan_path, wrong_scan_path):
     right_df = pd.read_csv(right_scan_path, sep='\t')
-    wrong_df = pd.read_csv(wrong_scan_path, sep='\t', usecols=['scan','precursor_mz','rt'])
-    wrong_df = wrong_df.rename(columns={'scan':'scan_sr'})
-    merge_raw = right_df.merge(wrong_df, on=['precursor_mz','rt'], how='inner')
-    assert len(merge_raw) == len(right_df), "ERROR: wiff rawspectrum match has different rows"
-    return merge_raw
+    wrong_df = pd.read_csv(wrong_scan_path, sep='\t', usecols=['scan'])
+    right_df['scan_sr'] = list(wrong_df['scan'])
+    return right_df
  
 def gen_mzml_tims_sage_msdt(raw_data_path, search_result_path, output_path, unify_residue):
     try:
@@ -159,7 +157,11 @@ def gen_wiff_sage_msdt(raw_data_path, wiff_mzml_path, search_result_path, output
         subprocess.run(cmd, capture_output=True, text=True)
         
         if os.path.exists(wrong_temp_raw):
-            merge_raw = change_wiff_scan(raw_data_path, wrong_temp_raw)
+            raw_df = change_wiff_scan(raw_data_path, wrong_temp_raw)
+            raw_df = raw_df.dropna(subset=['scan', 'mz_array','intensity_array'])
+            raw_df['scan'] = raw_df['scan'].astype(int)
+            raw_df['mz_array'] = raw_df['mz_array'].str.split(',').map(lambda x: np.array(x, dtype='float32'))
+            raw_df['intensity_array'] = raw_df['intensity_array'].str.split(',').map(lambda x: np.array(x, dtype='float32'))
         else:
             logger.error(f"fail to generate wiff temp rawspectrum: {wrong_temp_raw}")
             return -1
@@ -208,7 +210,7 @@ def gen_wiff_sage_msdt(raw_data_path, wiff_mzml_path, search_result_path, output
         resultdf_grouped['ion_mobility'] = resultdf_grouped['ion_mobility'].apply(lambda x: [np.float32(i) for i in x])
         resultdf_grouped['delta_rt'] = resultdf_grouped['delta_rt'].apply(lambda x: [np.float32(i) for i in x])
 
-        parquet_df = resultdf_grouped.merge(merge_raw, on='scan_sr', how='inner')
+        parquet_df = resultdf_grouped.merge(raw_df, on='scan_sr', how='inner')
         parquet_df = parquet_df.drop('scan_sr', axis=1)
         assert len(parquet_df) == len(resultdf_grouped)
 
