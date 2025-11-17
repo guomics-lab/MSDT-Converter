@@ -25,13 +25,13 @@ directory to the container's working directory.
 1. **Open Docker Desktop.** Ensure the Docker engine is running.
 2. **Pull the Docker Image** from the registry using your command line (e.g., PowerShell or Command Prompt):
    ```bash
-   docker pull guomics2017/msdt-converter:v1.0
+   docker pull guomics2017/msdt-converter:v1.1
    ```
 3. **Run the Container** by mounting your local working directory (`D:\Work\MassNet-DDA` in this example) to the
    container's internal data path (`/home/test_data`) and specifying the path to your configuration file (
    `config.json`):
    ```bash
-   docker run --rm -v "D:\Work\MassNet-DDA":/home/test_data guomics2017/msdt-converter:v1.0 -config=/home/test_data/config.json
+   docker run --rm -v "D:\Work\MassNet-DDA":/home/test_data guomics2017/msdt-converter:v1.1 -config=/home/test_data/config.json
    ```
     * **Note:** The `-v` flag maps your local directory to the container. The paths must be adjusted according to your
       actual setup.
@@ -46,11 +46,11 @@ directory to the container's working directory.
 1. **Ensure the Docker service is running.**
 2. **Pull the Docker Image** from the registry in your terminal:
    ```bash
-   docker pull guomics2017/msdt-converter:v1.0
+   docker pull guomics2017/msdt-converter:v1.1
    ```
 3. **Run the Container** (Example using a typical Linux absolute path):
    ```bash
-   docker run --rm -v /home/user/MassNet-DDA:/home/test_data guomics2017/msdt-converter:v1.0 -config=/home/test_data/config.json
+   docker run --rm -v /home/user/MassNet-DDA:/home/test_data guomics2017/msdt-converter:v1.1 -config=/home/test_data/config.json
    ```
 
 ---
@@ -63,11 +63,11 @@ directory to the container's working directory.
 1. **Open Docker Desktop.** Ensure the Docker engine is running.
 2. **Pull the Docker Image** from the registry in your terminal:
    ```bash
-   docker pull guomics2017/msdt-converter:v1.0
+   docker pull guomics2017/msdt-converter:v1.1
    ```
 3. **Run the Container** (Example using a typical macOS path):
    ```bash
-   docker run --rm -v /Users/yourname/Documents/MassNet-DDA:/home/test_data guomics2017/msdt-converter:v1.0 -config=/home/test_data/config.json
+   docker run --rm -v /Users/yourname/Documents/MassNet-DDA:/home/test_data guomics2017/msdt-converter:v1.1 -config=/home/test_data/config.json
    ```
 
 ## Option B: Conda
