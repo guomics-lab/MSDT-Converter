@@ -6,7 +6,7 @@ format—an efficient, standardized, and AI-friendly representation designed for
 
 ✨ **Key Features**
 
-* **Supported input formats:**
+** **Supported input formats:**
 
 * **mzML (standard open format)**
 
