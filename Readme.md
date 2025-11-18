@@ -126,6 +126,9 @@ directory to the container's working directory.
    ```
 
 ## Option B: Conda
+You can install MassNet-Converter in a Conda environment. This option is recommended if you prefer a Python-native setup or wish to modify the source code.
+
+⏱️ Estimated setup time: **~2–5 minutes**
 
 ### Prerequisites
 
