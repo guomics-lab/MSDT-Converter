@@ -36,7 +36,7 @@ As this project contains large test data files tracked by **Git LFS (Large File 
 | **msdt_2_mgf** | 5 s | 1 min | 1 min |
 | **convert_2_msdt** | 5 s | 5 s | 5 s |
 
-### 💻 Cloning Step s
+### 💻 Cloning Steps
 
 1.  **Ensure Git LFS is installed and initialized:**
     ```bash
