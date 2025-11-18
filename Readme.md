@@ -6,8 +6,6 @@
 
 ## ✨ Key Features
 
-### 🚀 Supported input formats
-
 * **Supported Input Formats:**
     * `mzML` (standard open format)
     * `MGF` (Mascot Generic Format)
@@ -18,8 +16,6 @@
 
 * **Optimized for AI Workflows:**
     * Converts raw and search result data into structured **tensor format** for seamless integration with machine learning models, such as XuanjiNovo, DeepLC, and DDA-BERT.
-
-### 🐳 Deployment
 
 * **Dockerized Deployment:**
     * Ready-to-use Docker image available on Docker Hub.
