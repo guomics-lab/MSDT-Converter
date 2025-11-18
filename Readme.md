@@ -33,12 +33,12 @@ As this project contains large test data files tracked by **Git LFS (Large File 
 
 | | mzml | tims | wiff |
 | :--- | :--- | :--- | :--- |
-| **generate_rawspectrum** | 20s | 3min | 1min |
-| **generate_sage_search_result** | 30s | 1min | 1min |
-| **generate_fragpipe_search_result** | 7min | 7min | 5min |
-| **generate_msdt(sage)** | 5s | 30s | 1min |
-| **msdt_2_mgf** | 5s | 1min | 1min |
-| **convert_2_msdt** | 5s | 5s | 5s |
+| **generate_rawspectrum** | 20 s | 3 min | 1 min |
+| **generate_sage_search_result** | 30 s | 1 min | 1 min |
+| **generate_fragpipe_search_result** | 7 min | 7 min | 5 min |
+| **generate_msdt(sage)** | 5 s | 30 s | 1 min |
+| **msdt_2_mgf** | 5 s | 1 min | 1 min |
+| **convert_2_msdt** | 5 s | 5 s | 5 s |
 
 ### 💻 Cloning Steps
 
