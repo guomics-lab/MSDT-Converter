@@ -139,6 +139,14 @@ conda activate msdt-converter
 pip install -r ./requirements.txt
 ```
 
+3. Set up file permissions:
+After cloning the repository and completing the installation, run the following command in the project’s root directory to ensure that all files and subdirectories have the appropriate access and execution permissions:
+
+```
+chmod -R 775 .
+```
+
+
 ### Run the script:
 
 ```bash
