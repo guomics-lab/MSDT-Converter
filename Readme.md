@@ -141,6 +141,8 @@ with a different version of FragPipe should download the corresponding component
 to consult the official output specifications for that release. Accordingly, configuration files (to be specified) or the parsing script (MSDT-Converter/scripts/search_engine.py) 
 may need to be adjusted to ensure correct interpretation and processing of the data.
 
+To learn more about FragPipe’s usage and configuration, please visit: [here] (https://github.com/Nesvilab/FragPipe)
+
 1. Create a new conda environment first:
 
 ```
