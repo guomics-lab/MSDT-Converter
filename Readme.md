@@ -1,38 +1,58 @@
 # 📦 MSDT-Converter
 
-**MassNet-Converter** is a tool for converting commonly used mass spectrometry data formats into the Mass Spectrometry DDA Tensor (MSDT) 
-format—an efficient, standardized, and AI-friendly representation designed for large-scale proteomics analysis.
+**MassNet-Converter** is a tool for converting commonly used mass spectrometry data formats into the Mass Spectrometry DDA Tensor (MSDT) format—an efficient, standardized, and AI-friendly representation designed for large-scale proteomics analysis.
 
+---
 
-✨ **Key Features**
+## ✨ Key Features
 
-**Supported input formats:**
+### 🚀 Supported input formats
 
-* **mzML (standard open format)**
+* **Supported Input Formats:**
+    * `mzML` (standard open format)
+    * `MGF` (Mascot Generic Format)
+    * Bruker’s native `.d` directory format (TimsTOF)
 
-* **MGF (Mascot Generic Format)**
+* **Output Format:**
+    * Standardized **MSDT** files stored in **Apache Parquet**, enabling fast I/O, high compression, and compatibility with distributed GPU/TPU training pipelines.
 
-* **Bruker’s native .d format (TimsTOF)**
+* **Optimized for AI Workflows:**
+    * Converts raw and search result data into structured **tensor format** for seamless integration with machine learning models, such as XuanjiNovo, DeepLC, and DDA-BERT.
 
-**Output format:**
+### 🐳 Deployment
 
-Standardized MSDT files stored in **Apache Parquet**, enabling fast I/O, high compression, and compatibility with distributed GPU/TPU training pipelines.
+* **Dockerized Deployment:**
+    * Ready-to-use Docker image available on Docker Hub.
+    * Run the converter in a reproducible environment without manual dependencies.
 
-**Optimized for AI workflows:**
-Converts raw and search result data into structured tensor format for seamless integration with machine learning models, such as DeepLC, XuanjiNovo, and DDA-BERT.
+---
 
-**Dockerized deployment:**
+# 📥 Getting the Test Data (Cloning with LFS)
 
-* **Ready-to-use Docker image available on Docker Hub**
+As this project contains large test data files tracked by **Git LFS (Large File Storage)**, users **must** use the `git lfs clone` command when cloning the repository to ensure all large files are downloaded correctly. The running times for our test data by step are roughly as follows:
 
-* **Run the converter in a reproducible environment without manual dependencies**
+| | mzml | tims | wiff |
+| :--- | :--- | :--- | :--- |
+| **generate_rawspectrum** | 20s | 3min | 1min |
+| **generate_sage_search_result** | 30s | 1min | 1min |
+| **generate_fragpipe_search_result** | 7min | 7min | 5min |
+| **generate_msdt(sage)** | 5s | 30s | 1min |
+| **msdt_2_mgf** | 5s | 1min | 1min |
+| **convert_2_msdt** | 5s | 5s | 5s |
 
-📄 **Citation**
+### 💻 Cloning Steps
 
-If you use MassNet-Converter in your work, please cite:
+1.  **Ensure Git LFS is installed and initialized:**
+    ```bash
+    git lfs install
+    ```
+2.  **Clone the repository using Git LFS:**
+    ```bash
+    git lfs clone https://github.com/guomics-lab/MSDT-Converter.git
+    ```
+    > **⚠️ Note:** If you used a regular `git clone` by mistake, navigate into the directory and run `git lfs pull` to download the large files.
 
-Jun, A., Zhang, X., Zhang, X., Wei, J., Zhang, T., Deng, Y., ... & Guo, T. (2025). MassNet: billion-scale AI-friendly mass spectral corpus enables robust de novo peptide sequencing. bioRxiv, 2025-06.
-
+---
 
 # 🚀 Quick Start Guide
 
@@ -41,6 +61,10 @@ Jun, A., Zhang, X., Zhang, X., Wei, J., Zhang, T., Deng, Y., ... & Guo, T. (2025
 We provide both Docker and Conda set-up guide, user can choose between option A: Docker and option B: Conda below:
 
 ## Option A: Docker
+
+This repository provides a self-contained **Docker image** that encapsulates all necessary environments and
+dependencies for the MassNet-DDA conversion utility. By using this image, users can quickly launch the tool without
+complex setup.
 
 ### Prerequisites
 
@@ -107,11 +131,6 @@ directory to the container's working directory.
 
 Download jdk11 from [here](https://guomics-share.oss-cn-shanghai.aliyuncs.com/SOFTWARE/MSDT-Converter/jdk-11.0.26.zip),
 unzip and move to project root directory.
-> **⚠️Note**: The jdk is from Oracle, we only provide the jdk for download easy.
-
-Download FragPipe
-from [here](https://guomics-share.oss-cn-shanghai.aliyuncs.com/SOFTWARE/MSDT-Converter/FragPipe-21.1.zip), unzip and
-move to project root directory.
 > **⚠️Note**: This project integrates **FragPipe v21.1**, which includes core components such as Philosopher, diaTracer, and IonQuant. Users working 
 with a different version of FragPipe should download the corresponding components for that version and **ensure the FragPipe runtime environment is properly configured**. 
 
@@ -146,7 +165,6 @@ After cloning the repository and completing the installation, run the following 
 ```
 chmod -R 775 .
 ```
-
 
 ### Run the script:
 
@@ -208,8 +226,7 @@ The configuration is structured by the main processing steps. Each primary objec
 | **`need`** | `boolean` | `true` | Set to `true` to execute this step (run FragPipe search). |
 | **`workdir`** | `string` | `/home/test_data/3_generate_fragpipe_search_result` | **Input/Output.** Working directory where FragPipe will generate results. |
 | **`data_path`** | `string` | `/home/test_data/.../DDA_ingel_3D.mzML` | **Input.** Path to the mzML file used for searching. |
-| **`fasta_path`** | `string` | `/home/test_data/.../fasta.fas` | **Input.** Path to the FASTA protein sequence database file. |
-| **`workflow_path`** | `string` | `/home/test_data/.../LFQ_DDA_human_noNQ.workflow` | **Input.** Path to the FragPipe workflow configuration file. |
+| **`workflow_path`** | `string` | `/home/test_data/.../LFQ_DDA_human_noNQ.workflow` | **Input.** Path to the FragPipe workflow configuration file and the fasta path should be set in the workflow. |
 | **`manifest_path`** | `string` | `/home/test_data/.../fragpipe-files.fp-manifest` | **Output.** Path for the FragPipe temporary manifest output file. |
 | **`thread_num`** | `integer` | `10` | The number of CPU threads to use for the FragPipe search process. |
 
@@ -289,3 +306,10 @@ This section handles direct conversion from other data formats to MSDT.
 | **`need`** | `boolean` | `true` | Set to `true` to execute this step (convert MSDT back to MGF). |
 | **`msdt_path`** | `string` | `/home/test_data/.../sage_msdt.parquet` | **Input.** Path to the MSDT `.parquet` file to be converted. |
 | **`output_path`** | `string` | `/home/test_data/.../sage.mgf` | **Output.** Path for the generated MGF file. |
+
+---
+
+## 📚 Citation
+
+If you use **MassNet-Converter** in your work, please cite the following publication:
+Jun, A., Zhang, X., Zhang, X., Wei, J., Zhang, T., Deng, Y., ... & Guo, T. (2025). MassNet: billion-scale AI-friendly mass spectral corpus enables robust de novo peptide sequencing. bioRxiv, 2025-06.
