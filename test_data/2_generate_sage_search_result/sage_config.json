@@ -52,7 +52,7 @@
         2
     ],
     "mzml_paths": [
-        "/home/test_data/1_generate_rawspectrum/A180430_jiazj_CRC_DDA_ingel_3D.mzML"
+        "/home/test_data/1_generate_rawspectrum/G20220522caix_GNHSU_lib_90min_IDA_18.mzML"
     ],
-    "output_directory": "/home/test_data/2_generate_sage_search_result"
+    "output_directory": "/home/test_data/2_generate_sage_search_result/wiff"
 }

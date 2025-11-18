@@ -1,0 +1,90 @@
+{
+  "version": "0.14.7",
+  "database": {
+    "bucket_size": 131072,
+    "enzyme": {
+      "missed_cleavages": 2,
+      "min_len": 7,
+      "max_len": 50,
+      "cleave_at": "KR",
+      "restrict": "P",
+      "c_terminal": null,
+      "semi_enzymatic": null
+    },
+    "fragment_min_mz": 150.0,
+    "fragment_max_mz": 1500.0,
+    "peptide_min_mass": 500.0,
+    "peptide_max_mass": 5000.0,
+    "ion_kinds": [
+      "b",
+      "y"
+    ],
+    "min_ion_index": 2,
+    "static_mods": {
+      "C": 57.0216
+    },
+    "variable_mods": {
+      "[": [
+        42.0
+      ],
+      "M": [
+        15.9949
+      ]
+    },
+    "max_variable_mods": 3,
+    "decoy_tag": "rev_",
+    "generate_decoys": true,
+    "fasta": "/home/test_data/2_generate_sage_search_result/Homo_sapiens_reviewed.fasta"
+  },
+  "quant": {
+    "tmt": null,
+    "tmt_settings": {
+      "level": 3,
+      "sn": false
+    },
+    "lfq": false,
+    "lfq_settings": {
+      "peak_scoring": "Hybrid",
+      "integration": "Sum",
+      "spectral_angle": 0.7,
+      "ppm_tolerance": 5.0,
+      "combine_charge_states": true
+    }
+  },
+  "precursor_tol": {
+    "ppm": [
+      -20.0,
+      20.0
+    ]
+  },
+  "fragment_tol": {
+    "ppm": [
+      -20.0,
+      20.0
+    ]
+  },
+  "precursor_charge": [
+    2,
+    5
+  ],
+  "isotope_errors": [
+    0,
+    2
+  ],
+  "deisotope": true,
+  "chimera": false,
+  "wide_window": false,
+  "min_peaks": 15,
+  "max_peaks": 150,
+  "max_fragment_charge": 2,
+  "min_matched_peaks": 4,
+  "report_psms": 10,
+  "predict_rt": true,
+  "mzml_paths": [
+    "/home/test_data/1_generate_rawspectrum/2021-10-26_Gabriel_29_PaSER_dda_30SPD_S1-C9_1_3176.d"
+  ],
+  "output_paths": [
+    "/home/test_data/2_generate_sage_search_result/tims/results.sage.tsv",
+    "/home/test_data/2_generate_sage_search_result/tims/results.json"
+  ]
+}

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<method>
+    <submethods>
+        <submethod program="HyStar_LC" revision="1">
+            <name>D:\Data\2021-10-26_Gabriel_29_PaSER_dda_30SPD_S1-C9_1_3176.d\3176.m\backup-2021-10-27.m</name>
+            <files>
+                <file name="hystar.method"/>
+            </files>
+        </submethod>
+        <submethod program="OtofImpacTEMControl" revision="1">
+            <name>D:\Data\2021-10-26_Gabriel_29_PaSER_dda_30SPD_S1-C9_1_3176.d\3176.m\backup-2021-10-27.m</name>
+            <files>
+                <file name="microTOFQImpacTemAcquisition.method"/>
+                <file name="diaSettings.diasqlite"/>
+                <file name="prmSettings.prmsqlite"/>
+                <file name="Maldi.method"/>
+            </files>
+        </submethod>
+        <submethod program="HyStar_Autosampler" revision="1">
+            <name>D:\Data\2021-10-26_Gabriel_29_PaSER_dda_30SPD_S1-C9_1_3176.d\3176.m\backup-2021-10-27.m</name>
+            <files/>
+        </submethod>
+    </submethods>
+    <locked>false</locked>
+    <readonly>true</readonly>
+    <comment/>
+</method>
