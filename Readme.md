@@ -16,10 +16,10 @@ Supported input formats:
 
 **Output format:**
 
-Standardized MSDT files stored in Apache Parquet, enabling fast I/O, high compression, and compatibility with distributed GPU/TPU training pipelines.
+Standardized MSDT files stored in **Apache Parquet**, enabling fast I/O, high compression, and compatibility with distributed GPU/TPU training pipelines.
 
 **Optimized for AI workflows:**
-Converts raw and search result data into structured tensor format for seamless integration with machine learning models, such as DDA-BERT and XuanjiNovo.
+Converts raw and search result data into structured tensor format for seamless integration with machine learning models, such as DeepLC, XuanjiNovo, and DDA-BERT.
 
 **Dockerized deployment:**
 
@@ -28,6 +28,7 @@ Converts raw and search result data into structured tensor format for seamless i
 * **Run the converter in a reproducible environment without manual dependencies**
 
 📄 **Citation**
+
 If you use MassNet-Converter in your work, please cite:
 Jun, A., Zhang, X., Zhang, X., Wei, J., Zhang, T., Deng, Y., ... & Guo, T. (2025). MassNet: billion-scale AI-friendly mass spectral corpus enables robust de novo peptide sequencing. bioRxiv, 2025-06.
 
