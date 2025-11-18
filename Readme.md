@@ -6,7 +6,7 @@ format—an efficient, standardized, and AI-friendly representation designed for
 
 ✨ **Key Features**
 
-** **Supported input formats:**
+**Supported input formats:**
 
 * **mzML (standard open format)**
 
@@ -14,7 +14,7 @@ format—an efficient, standardized, and AI-friendly representation designed for
 
 * **Bruker’s native .d format (TimsTOF)**
 
-* **Output format:**
+**Output format:**
 
 Standardized MSDT files stored in **Apache Parquet**, enabling fast I/O, high compression, and compatibility with distributed GPU/TPU training pipelines.
 
