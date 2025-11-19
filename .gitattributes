@@ -7,6 +7,5 @@
 *.mzBIN filter=lfs diff=lfs merge=lfs -text
 *.d filter=lfs diff=lfs merge=lfs -text
 *.pin filter=lfs diff=lfs merge=lfs -text
-*d filter=lfs diff=lfs merge=lfs -text
 *.tdf_bin filter=lfs diff=lfs merge=lfs -text
 *.tdf filter=lfs diff=lfs merge=lfs -text
