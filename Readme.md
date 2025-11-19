@@ -197,8 +197,8 @@ After cloning the repository and completing the installation, run the following 
 chmod -R 775 .
 ```
 
-### **Ensure that the test data has been downloaded (see the link above)**, then run the script：
-
+### Run the script:
+> **⚠️Note**: Ensure that the test data has been downloaded (see the link above)
 ```bash
 python convert.py -config=/home/test_data/config.json
 ```
