@@ -1,0 +1,11 @@
+useDetect = false
+numThreads = 10
+DiaNN = /app/FragPipe-21.1/tools/diann/1.8.2_beta_8/linux/diann-1.8.1.8
+renamePin = 1
+useRT = true
+useSpectra = true
+fragger = /home/test_data/3_generate_fragpipe_search_result/mzml/fragger.params
+deletePreds = false
+mzmlDirectory = /home/test_data/1_generate_rawspectrum 
+pinPepXMLDirectory = exp/A180430_jiazj_CRC_DDA_ingel_3D.pin
+useMultipleCorrelatedFeatures = false
