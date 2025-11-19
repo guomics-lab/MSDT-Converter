@@ -38,11 +38,11 @@ All test data and configuration files are available for download via the Google 
 
 Below are command line examples for running the data conversion using the `guomics2017/msdt-converter:v1.1` Docker image for different instrument data.
 
-> **Note:** Please replace the local path `D:\Work\MSDT_Converter` in the commands with your actual data storage path.
+> **Note:** Please replace the local path "`D:\Work\MSDT_Converter`" in the commands with your actual data storage path.
 
 ### 1. Thermo Data Conversion
 
-Uses the `config_mzml.json` configuration file.
+Uses the ""`config_mzml.json` configuration file.
 
 ```bash
 docker run --rm -v "D:\Work\MSDT_Converter":/home guomics2017/msdt-converter:v1.1 -config=/home/config_mzml.json
