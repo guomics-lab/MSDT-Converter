@@ -198,7 +198,7 @@ chmod -R 775 .
 ```
 
 ### Run the script:
-> **⚠️Note**: Before running the script, please download ** [test data and configs](https://drive.google.com/drive/folders/1gZnnue6BFuv6rowjXCX3NC_ug8cr2Pkn?usp=drive_link)** to the root directory using the link provided above.
+> **⚠️Note**: Before running the script, please download [test data and configs](https://drive.google.com/drive/folders/1gZnnue6BFuv6rowjXCX3NC_ug8cr2Pkn?usp=drive_link) to the root directory using the link provided above.
 
 ```bash
 python convert.py -config=/home/test_data/config.json
