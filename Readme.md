@@ -23,9 +23,49 @@
 
 ---
 
-# 📥 Getting the Test Data (Cloning with LFS)
+# 📥 Getting the Test Data and Configurations (Google Drive)
 
-As this project contains large test data files tracked by **Git LFS (Large File Storage)**, users **must** use the `git lfs clone` command when cloning the repository to ensure all large files are downloaded correctly. The running times for our test data by step are roughly as follows:
+We provide the **Mass Spectrometry raw (MS raw)** data and conversion results for Thermo, Bruker, and SCIEX platforms.
+
+You can download all test data and configuration files using the following Google Drive link:
+
+* **🔗 Download Link:** [test data and configs](https://drive.google.com/drive/folders/1gZnnue6BFuv6rowjXCX3NC_ug8cr2Pkn?usp=drive_link)
+
+---
+
+## 💻 Command Line Usage Examples (Docker)
+
+Below are command line examples for running the data conversion using the `guomics2017/msdt-converter:v1.1` Docker image for different instrument data.
+
+> **Note:** Please replace the local path `D:\Work\MSDT_Converter` in the commands with your actual data storage path.
+
+### 1. Thermo Data Conversion
+
+Uses the `config_mzml.json` configuration file.
+
+```bash
+docker run --rm -v "D:\Work\MSDT_Converter":/home guomics2017/msdt-converter:v1.1 -config=/home/config_mzml.json
+```
+
+### 2. Bruker Data Conversion
+
+Uses the `config_tims.json` configuration file.
+
+```bash
+docker run --rm -v "D:\Work\MSDT_Converter":/home guomics2017/msdt-converter:v1.1 -config=/home/config_tims.json
+```
+
+### 3. SCIEX Data Conversion
+
+Uses the `config_wiff.json` configuration file.
+
+```bash
+docker run --rm -v "D:\Work\MSDT_Converter":/home guomics2017/msdt-converter:v1.1 -config=/home/config_wiff.json
+```
+
+
+
+The running times for our test data by step are roughly as follows:
 
 | | mzml | tims | wiff |
 | :--- | :--- | :--- | :--- |
@@ -36,17 +76,6 @@ As this project contains large test data files tracked by **Git LFS (Large File 
 | **msdt_2_mgf** | 5 s | 1 min | 1 min |
 | **convert_2_msdt** | 5 s | 5 s | 5 s |
 
-### 💻 Cloning Steps
-
-1.  **Ensure Git LFS is installed and initialized:**
-    ```bash
-    git lfs install
-    ```
-2.  **Clone the repository using Git LFS:**
-    ```bash
-    git lfs clone https://github.com/guomics-lab/MSDT-Converter.git
-    ```
-    > **⚠️ Note:** If you used a regular `git clone` by mistake, navigate into the directory and run `git lfs pull` to download the large files.
 
 ---
 
