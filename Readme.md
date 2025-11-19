@@ -42,7 +42,7 @@ Below are command line examples for running the data conversion using the `guomi
 
 ### 1. Thermo Data Conversion
 
-Uses the ""`config_mzml.json` configuration file.
+Uses the `config_mzml.json` configuration file.
 
 ```bash
 docker run --rm -v "D:\Work\MSDT_Converter":/home guomics2017/msdt-converter:v1.1 -config=/home/config_mzml.json
