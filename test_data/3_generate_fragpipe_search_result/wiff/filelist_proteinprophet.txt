@@ -1,1 +1,0 @@
-/home/test_data/3_generate_fragpipe_search_result/wiff/exp/interact-G20220522caix_GNHSU_lib_90min_IDA_18.pep.xml
