@@ -198,7 +198,7 @@ chmod -R 775 .
 ```
 
 ### Run the script:
-> **⚠️Note**: Ensure that the test data has been downloaded (see the link above)
+> **⚠️Note**: Ensure that the test data has been downloaded (see the Google Drive link above)
 ```bash
 python convert.py -config=/home/test_data/config.json
 ```
