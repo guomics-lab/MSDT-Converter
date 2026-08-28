@@ -18,10 +18,6 @@ For more detailed information on the MSDT format, including its schema and desig
 * **Output Format:**
     * Standardized **MSDT** files stored in **Apache Parquet**, enabling efficient storage, high compression, and scalable data preparation for large-scale AI workflows.
 
-* **Search-Engine Enrichment:**
-    * Enriches FragPipe-derived MSDT Parquet files with Percolator `score`, `q-value`, and `PEP` fields.
-    * Supports batch FragPipe search from a file list and true global FDR estimation.
-
 * **Optimized for AI Workflows:**
     * Converts raw and search result data into structured **tensor format** for seamless integration with machine learning models, such as XuanjiNovo, DeepLC, and DDA-BERT.
 
