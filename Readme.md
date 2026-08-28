@@ -13,9 +13,14 @@ For more detailed information on the MSDT format, including its schema and desig
     * `mzML` (standard open format)
     * `MGF` (Mascot Generic Format)
     * Bruker’s native `.d` directory format (TimsTOF)
+    * WIFF-derived `mzML` (SCIEX, converted beforehand with a compatible tool)
 
 * **Output Format:**
     * Standardized **MSDT** files stored in **Apache Parquet**, enabling efficient storage, high compression, and scalable data preparation for large-scale AI workflows.
+
+* **Search-Engine Enrichment:**
+    * Enriches FragPipe-derived MSDT Parquet files with Percolator `score`, `q-value`, and `PEP` fields.
+    * Supports batch FragPipe search from a file list and true global FDR estimation.
 
 * **Optimized for AI Workflows:**
     * Converts raw and search result data into structured **tensor format** for seamless integration with machine learning models, such as XuanjiNovo, DeepLC, and DDA-BERT.
@@ -23,140 +28,6 @@ For more detailed information on the MSDT format, including its schema and desig
 * **Dockerized Deployment:**
     * Ready-to-use Docker image available on Docker Hub.
     * Run the converter in a reproducible environment without manual dependencies.
-
----
-
-## MSDT-Converter v2 additions
-
-Version 2 adds the missing FragPipe path for WIFF-derived mzML data and can enrich
-FP-derived MSDT Parquet files with the Percolator `score`, `q-value`, and `PEP`
-fields. Matching is performed with the per-run key
-`scan + charge + modified_sequence`; duplicate keys, missing matches, and
-target/decoy label conflicts stop the conversion instead of silently duplicating
-or dropping rows.
-
-The two MSBooster-derived PIN features `unweighted_spectral_entropy` and
-`delta_RT_loess` are optional. If a valid FragPipe workflow does not emit them,
-the converter keeps the output columns and fills them with null values.
-
-FragPipe workflows used by the converter are copied into the result directory and
-the copy is forced to contain:
-
-```text
-percolator.run-percolator=true
-percolator.keep-tsv-files=true
-```
-
-The source workflow is never overwritten.
-The repository also ships `workflows/Default-v2.workflow`, based on the
-FragPipe 21.1 default workflow with both Percolator settings enabled.
-
-### Enrich an existing FP Parquet
-
-```bash
-python convert.py enrich \
-  --parquet sample_fp_msdt.parquet \
-  --target-tsv sample_percolator_target_psms.tsv \
-  --decoy-tsv sample_percolator_decoy_psms.tsv \
-  --output sample_fp_msdt_v2.parquet
-```
-
-When the TSVs came from a global Percolator run, select target PSMs at 1% FDR
-while retaining decoys with:
-
-```bash
-python convert.py enrich ... --run-id sample --global-fdr 0.01
-```
-
-### Build a WIFF FP-derived MSDT
-
-The current Linux extractors cannot read the proprietary SCIEX `.wiff/.wiff.scan`
-pair directly. Convert the pair to mzML first with a SCIEX-compatible converter
-(for example ProteoWizard/MSConvert on a supported Windows installation), then
-pass that mzML together with the WIFF-native raw-spectrum Parquet, FragPipe PIN,
-and Percolator TSV files:
-
-```bash
-python convert.py fp-msdt \
-  --instrument wiff \
-  --wiff-mzml sample.mzML \
-  --raw-spectrum sample_rawspectrum.parquet \
-  --pin sample_edited.pin \
-  --target-tsv sample_percolator_target_psms.tsv \
-  --decoy-tsv sample_percolator_decoy_psms.tsv \
-  --output sample_fp_wiff_msdt.parquet
-```
-
-The converter cross-validates the WIFF-native SCIEX IDs and the raw-spectrum
-Parquet position with retention time and precursor m/z. FragPipe's `ScanNr` is
-the 1-based mzML spectrum index, so it is matched to the Parquet's 0-based
-`scan` as `ScanNr = scan + 1`; SCIEX `cycle` is never used alone because it is
-not unique. A row-count, ordering, RT, or precursor-m/z mismatch stops
-conversion instead of silently assigning the wrong native scan.
-
-### Batch FragPipe search with `file_list`
-
-The short format contains one input path per line:
-
-```text
-/data/sample01.mzML
-/data/sample02.mzML
-```
-
-The official four-column FragPipe manifest format is also accepted:
-
-```text
-/data/sample01.mzML	control	1	DDA
-/data/sample02.mzML	treatment	2	DDA
-```
-
-Run the batch search with:
-
-```bash
-python convert.py fp-search \
-  --file-list file_list.tsv \
-  --workdir results \
-  --fasta database.fasta \
-  --workflow workflows/Default-v2.workflow \
-  --threads 20
-```
-
-### True global FDR
-
-Do not pool scores from separately trained Percolator models. Instead, combine
-compatible PIN files and run Percolator once:
-
-```bash
-python convert.py global-percolator \
-  --pin sample01=/results/sample01_edited.pin \
-  --pin sample02=/results/sample02_edited.pin \
-  --percolator-exe /path/to/percolator \
-  --output-dir /results/global_percolator \
-  --threads 20
-```
-
-Each PIN must have the same feature header and `DefaultDirection`. The converter
-prefixes every PSM identifier with its run ID and remaps `(run_id, ScanNr)` to a
-globally unique spectrum number before running Percolator. All candidates from
-the same spectrum retain the same remapped number. It then writes global
-target/decoy TSVs and later filters each run before checking per-run `psm_id`
-uniqueness.
-`config_global_fdr.example.json` shows the equivalent JSON configuration.
-
-Legacy configuration remains supported:
-
-```bash
-python convert.py -config=config_wiff.json
-```
-
-Build the complete v2 image locally. The Dockerfile layers the v2 source over
-the published v1.3 toolchain so FragPipe, MSFragger, Philosopher, JDK, and the
-vendor-independent spectrum extractors are all available:
-
-```bash
-docker build -t msdt-converter:v2 .
-docker run --rm msdt-converter:v2 --help
-```
 
 ---
 
@@ -173,9 +44,7 @@ All test data and configuration files are available for download via the Google 
 
 ## 💻 Command Line Usage Examples (Docker)
 
-Below are command line examples for running the data conversion using the locally
-built `msdt-converter:v2` image for different instrument data. Build it first
-with `docker build -t msdt-converter:v2 .` from the repository root.
+Below are command line examples for running the data conversion using the locally built `msdt-converter:v2` Docker image for different instrument data. Build it first with `docker build -t msdt-converter:v2 .` from the repository root.
 
 > **Note:** Please replace the local path `D:\Work\MSDT_Converter` in the commands with your actual data storage path.
 
@@ -236,12 +105,11 @@ complex setup.
 
 ---
 
-The process builds the v2 image from this repository and then runs a container,
-mapping your local data directory to the container's working directory. Docker
-automatically pulls the published v1.3 toolchain base image during the build.
+The process builds the image from this repository and then runs a container, mapping your local data
+directory to the container's working directory. Docker automatically pulls the published v1.3 toolchain base image during the build.
 
 1. **Ensure the Docker service is running.**
-2. **Build the v2 Docker Image** from the repository root:
+2. **Build the Docker Image** from the repository root:
    ```bash
    docker build -t msdt-converter:v2 .
    ```
@@ -261,7 +129,7 @@ Download jdk11 from [here](https://guomics-share.oss-cn-shanghai.aliyuncs.com/SO
 unzip and move to project root directory.
 > **⚠️Note**: This project was built using **FragPipe v21.1**, which includes the following core components: **MSFragger v4.0**, **Philosopher v5.1.1**, **diaTracer v1.1.5**, **IonQuant v1.10.27**. If you're using a different version of FragPipe, make sure to download compatible versions of these tools and properly configure your environment to ensure smooth execution of the analysis pipeline.. 
 
-You can download FragPipe from [here](https://guomics-share.oss-cn-shanghai.aliyuncs.com/SOFTWARE/MSDT-Converter/FragPipe-21.1.zip) with the following core components.
+You can download FragPipe from [here](https://guomics-share.oss-cn-shanghai.aliyuncs.com/SOFTWARE/MSDT-Converter/FragPipe-21.1.zip) with the following core components。
 
 
 > **⚠️Note**: FragPipe versions may differ in their output fields, directory structures, and execution commands. When working with results generated by a different version, users are advised 
@@ -304,6 +172,104 @@ chmod -R 775 .
 ```bash
 python convert.py -config=/home/test_data/config.json
 ```
+
+---
+
+## 🧰 Command-Line Tools
+
+In addition to the JSON-configuration workflow, the converter provides dedicated subcommands for common tasks.
+
+### Enrich an Existing FP Parquet
+
+Enrich a FragPipe-derived MSDT Parquet file with the Percolator `score`, `q-value`, and `PEP` fields:
+
+```bash
+python convert.py enrich \
+  --parquet sample_fp_msdt.parquet \
+  --target-tsv sample_percolator_target_psms.tsv \
+  --decoy-tsv sample_percolator_decoy_psms.tsv \
+  --output sample_fp_msdt_v2.parquet
+```
+
+Matching between the Parquet rows and the Percolator PSMs is performed with the per-run key `scan + charge + modified_sequence`. Duplicate keys, missing matches, and target/decoy label conflicts stop the conversion instead of silently duplicating or dropping rows.
+
+When the TSVs came from a global Percolator run, select target PSMs at 1% FDR while retaining decoys with:
+
+```bash
+python convert.py enrich ... --run-id sample --global-fdr 0.01
+```
+
+### Build a WIFF FP-Derived MSDT
+
+The Linux extractors cannot read the proprietary SCIEX `.wiff/.wiff.scan` pair directly. Convert the pair to mzML first with a SCIEX-compatible converter (for example ProteoWizard/MSConvert on a supported Windows installation), then pass that mzML together with the WIFF-native raw-spectrum Parquet, FragPipe PIN, and Percolator TSV files:
+
+```bash
+python convert.py fp-msdt \
+  --instrument wiff \
+  --wiff-mzml sample.mzML \
+  --raw-spectrum sample_rawspectrum.parquet \
+  --pin sample_edited.pin \
+  --target-tsv sample_percolator_target_psms.tsv \
+  --decoy-tsv sample_percolator_decoy_psms.tsv \
+  --output sample_fp_wiff_msdt.parquet
+```
+
+The converter cross-validates the WIFF-native SCIEX IDs and the raw-spectrum Parquet position with retention time and precursor m/z. FragPipe's `ScanNr` is the 1-based mzML spectrum index, so it is matched to the Parquet's 0-based `scan` as `ScanNr = scan + 1`; SCIEX `cycle` is never used alone because it is not unique. A row-count, ordering, RT, or precursor-m/z mismatch stops conversion instead of silently assigning the wrong native scan.
+
+### Batch FragPipe Search
+
+Run a FragPipe search over multiple files with a file list. The short format contains one input path per line:
+
+```text
+/data/sample01.mzML
+/data/sample02.mzML
+```
+
+The official four-column FragPipe manifest format is also accepted:
+
+```text
+/data/sample01.mzML	control	1	DDA
+/data/sample02.mzML	treatment	2	DDA
+```
+
+Run the batch search with:
+
+```bash
+python convert.py fp-search \
+  --file-list file_list.tsv \
+  --workdir results \
+  --fasta database.fasta \
+  --workflow workflows/Default-v2.workflow \
+  --threads 20
+```
+
+### True Global FDR
+
+Do not pool scores from separately trained Percolator models. Instead, combine compatible PIN files and run Percolator once:
+
+```bash
+python convert.py global-percolator \
+  --pin sample01=/results/sample01_edited.pin \
+  --pin sample02=/results/sample02_edited.pin \
+  --percolator-exe /path/to/percolator \
+  --output-dir /results/global_percolator \
+  --threads 20
+```
+
+Each PIN must have the same feature header and `DefaultDirection`. The converter prefixes every PSM identifier with its run ID and remaps `(run_id, ScanNr)` to a globally unique spectrum number before running Percolator. All candidates from the same spectrum retain the same remapped number. It then writes global target/decoy TSVs and later filters each run before checking per-run `psm_id` uniqueness. `config_global_fdr.example.json` shows the equivalent JSON configuration.
+
+### FragPipe Workflow Handling
+
+FragPipe workflows used by the converter are copied into the result directory, and the copy is forced to contain:
+
+```text
+percolator.run-percolator=true
+percolator.keep-tsv-files=true
+```
+
+The source workflow is never overwritten. The repository also ships `workflows/Default-v2.workflow`, based on the FragPipe 21.1 default workflow with both Percolator settings enabled.
+
+The two MSBooster-derived PIN features `unweighted_spectral_entropy` and `delta_RT_loess` are optional. If a valid FragPipe workflow does not emit them, the converter keeps the output columns and fills them with null values.
 
 ---
 
