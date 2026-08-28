@@ -29,10 +29,9 @@ For more detailed information on the MSDT format, including its schema and desig
 
 # 📥 Getting the Test Data and Configurations (Google Drive)
 
-We provide test data from **Thermo, SCIEX, and Bruker platforms (in mzML, .d, and MGF formats)**, configuration files for the FragPipe and Sage search engines, and the converted 
-MSDT result files. 
+We provide test datasets from **Thermo, SCIEX, and Bruker platforms, covering mzML, .d, and MGF formats**, together with configuration files for the FragPipe and Sage search engines and the corresponding converted MSDT files.
 
-All test data and configuration files are available for download via the Google Drive link below:
+All test datasets, configuration files, and converted MSDT files can be downloaded from the Google Drive link below:
 
 * **🔗 Download Link:** [test data and configs](https://drive.google.com/drive/folders/1gZnnue6BFuv6rowjXCX3NC_ug8cr2Pkn?usp=drive_link)
 
