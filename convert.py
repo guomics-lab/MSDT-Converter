@@ -6,6 +6,7 @@ import argparse
 import copy
 import json
 import logging
+import os.path
 from pathlib import Path
 from typing import Sequence
 
@@ -262,10 +263,12 @@ def create_parser() -> argparse.ArgumentParser:
     enrich = commands.add_parser(
         "enrich", help="add Percolator fields to an FP MSDT Parquet"
     )
-    enrich.add_argument("--parquet", required=True)
-    enrich.add_argument("--target-tsv", required=True)
-    enrich.add_argument("--decoy-tsv", required=True)
-    enrich.add_argument("--output", required=True)
+    enrich.add_argument("--file", required=True)
+    enrich.add_argument("--data_type", required=True)
+    enrich.add_argument("--workdir", required=True)
+    enrich.add_argument("--fasta", required=True)
+    enrich.add_argument("--workflow", required=True)
+    enrich.add_argument("--threads", type=int, default=1)
     _add_run_id_argument(enrich)
     _add_global_fdr_argument(enrich)
 
@@ -324,15 +327,59 @@ def main(argv: Sequence[str] | None = None) -> int:
             )
             return 0 if state in (0, 1) else 1
         if args.command == "enrich":
-            report = enrich_parquet_with_percolator(
-                args.parquet,
-                args.target_tsv,
-                args.decoy_tsv,
-                args.output,
-                run_id=args.run_id,
-                fdr_threshold=args.global_fdr,
+
+            base_file_name = os.path.basename(args.file).removesuffix('.mzML')
+            rawspectrum_parquet = os.path.join(args.workdir, base_file_name + "_rawspectrum.parquet")
+            target_tsv = os.path.join(args.workdir, 'exp', base_file_name + "_percolator_target_psms.tsv")
+            decoy_tsv = os.path.join(args.workdir, 'exp', base_file_name + "_percolator_decoy_psms.tsv")
+            final_output_file = os.path.join(args.workdir, base_file_name + "_fp_msdt_v2.parquet")
+            pin_file = os.path.join(args.workdir, 'exp', base_file_name + "_edited.pin")
+
+            generate_rawspectrum_fn_param = {
+                "data_type": args.data_type,
+                "input": args.file,
+                "output": rawspectrum_parquet,
+            }
+            generate_rawspectrum_fn(generate_rawspectrum_fn_param)
+
+            generate_fp_search_result_fn(
+                {
+                    "data_path": args.file,
+                    "workdir": args.workdir,
+                    "fasta_path": args.fasta,
+                    "workflow_path": args.workflow,
+                    "thread_num": args.threads,
+                }
             )
-            logger.info("Enrichment report: %s", report)
+            common = {
+                "run_id": args.run_id,
+                "fdr_threshold": args.global_fdr,
+            }
+
+            if args.data_type == 'wiff2mzml':
+                if not args.wiff_mzml:
+                    parser.error("fp-msdt --instrument wiff requires --wiff-mzml")
+                gen_wiff_fragpipe_msdt(
+                    rawspectrum_parquet,
+                    args.file,
+                    pin_file,
+                    target_tsv,
+                    decoy_tsv,
+                    final_output_file,
+                    True,
+                    **common,
+                )
+            else:
+                gen_mzml_fragpipe_msdt(
+                    rawspectrum_parquet,
+                    pin_file,
+                    final_output_file,
+                    True,
+                    target_tsv,
+                    decoy_tsv,
+                    **common,
+                )
+
             return 0
         if args.command == "fp-msdt":
             common = {

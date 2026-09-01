@@ -180,10 +180,12 @@ Enrich a FragPipe-derived MSDT Parquet file with the Percolator `score`, `q-valu
 
 ```bash
 python convert.py enrich \
-  --parquet sample_fp_msdt.parquet \
-  --target-tsv sample_percolator_target_psms.tsv \
-  --decoy-tsv sample_percolator_decoy_psms.tsv \
-  --output sample_fp_msdt_v2.parquet
+  --file "/mnt/e/data/massnet-dda-convert/test/test_data/1_generate_rawspectrum/A180430_jiazj_CRC_DDA_ingel_3D.mzML" \
+  --data_type "mzml" \
+  --workdir "/mnt/e/data/massnet-dda-convert/test/run3/results" \
+  --fasta "/mnt/e/data/massnet-dda-convert/test/run1/Homo_sapiens_reviewed.fasta" \
+  --workflow workflows/Default-v2.workflow \
+  --threads 10
 ```
 
 Matching between the Parquet rows and the Percolator PSMs is performed with the per-run key `scan + charge + modified_sequence`. Duplicate keys, missing matches, and target/decoy label conflicts stop the conversion instead of silently duplicating or dropping rows.
