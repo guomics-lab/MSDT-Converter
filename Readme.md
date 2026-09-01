@@ -184,7 +184,7 @@ python convert.py enrich \
   --data_type "mzml" \
   --workdir "/mnt/data/massnet-dda-convert/test/results" \
   --fasta "/mnt/data/massnet-dda-convert/test/Homo_sapiens_reviewed.fasta" \
-  --workflow workflows/Default-v2.workflow \
+  --workflow workflows/Default.workflow \
   --threads 10
 ```
 
