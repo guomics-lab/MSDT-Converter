@@ -180,10 +180,10 @@ Enrich a FragPipe-derived MSDT Parquet file with the Percolator `score`, `q-valu
 
 ```bash
 python convert.py enrich \
-  --file "/mnt/e/data/massnet-dda-convert/test/test_data/1_generate_rawspectrum/A180430_jiazj_CRC_DDA_ingel_3D.mzML" \
+  --file "/mnt/data/massnet-dda-convert/test/test_data/test_raw.mzML" \
   --data_type "mzml" \
-  --workdir "/mnt/e/data/massnet-dda-convert/test/run3/results" \
-  --fasta "/mnt/e/data/massnet-dda-convert/test/run1/Homo_sapiens_reviewed.fasta" \
+  --workdir "/mnt/data/massnet-dda-convert/test/results" \
+  --fasta "/mnt/data/massnet-dda-convert/test/Homo_sapiens_reviewed.fasta" \
   --workflow workflows/Default-v2.workflow \
   --threads 10
 ```
