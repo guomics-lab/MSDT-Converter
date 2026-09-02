@@ -204,8 +204,8 @@ The configuration is structured by the main processing steps. Each primary objec
 | :--- | :--- | :--- | :--- |
 | **`need`** | `boolean` | `true` | Set to `true` to execute this step (extract raw spectra). |
 | **`data_type`** | `string` | `"mzml"` | The type of input data: `mzml`, `tims`, or `wiff2mzml` (for mzML converted from WIFF). |
-| **`data_path`** | `string` | `/home/test_data/.../DDA_ingel_3D.mzML` | **Input.** Absolute path to the raw data file (relative to the Docker mounted volume). |
-| **`output`** | `string` | `/home/test_data/.../3D_rawspectrum.tsv` | **Output.** Path for the generated raw spectrum TSV file. |
+| **`data_path`** | `string` | `/home/test_data/DDA_ingel_3D.mzML` | **Input.** Absolute path to the raw data file (relative to the Docker mounted volume). |
+| **`output`** | `string` | `/home/test_data/3D_rawspectrum.tsv` | **Output.** Path for the generated raw spectrum TSV file. |
 
 ---
 
@@ -215,9 +215,9 @@ The configuration is structured by the main processing steps. Each primary objec
 | :--- | :--- | :--- | :--- |
 | **`need`** | `boolean` | `true` | Set to `true` to execute this step (run Sage search). |
 | **`workdir`** | `string` | `/home/test_data/2_generate_sage_search_result` | **Input/Output.** Working directory where Sage will generate its result files. |
-| **`fasta`** | `string` | `/home/test_data/.../Homo_sapiens_reviewed.fasta` | **Input.** Path to the FASTA protein sequence database file. |
-| **`data_path`** | `string` | `/home/test_data/.../DDA_ingel_3D.mzML` | **Input.** Path to the mzML file used for searching. |
-| **`config_path`** | `string` | `/home/test_data/.../sage_config.json` | **Input.** Path to the specific configuration file for the Sage search engine. |
+| **`fasta`** | `string` | `/home/test_data/Homo_sapiens_reviewed.fasta` | **Input.** Path to the FASTA protein sequence database file. |
+| **`data_path`** | `string` | `/home/test_data/DDA_ingel_3D.mzML` | **Input.** Path to the mzML file used for searching. |
+| **`config_path`** | `string` | `/home/test_data/sage_config.json` | **Input.** Path to the specific configuration file for the Sage search engine. |
 
 ---
 
@@ -227,9 +227,9 @@ The configuration is structured by the main processing steps. Each primary objec
 | :--- | :--- | :--- | :--- |
 | **`need`** | `boolean` | `true` | Set to `true` to execute this step (run FragPipe search). |
 | **`workdir`** | `string` | `/home/test_data/3_generate_fragpipe_search_result` | **Input/Output.** Working directory where FragPipe will generate results. |
-| **`data_path`** | `string` | `/home/test_data/.../DDA_ingel_3D.mzML` | **Input.** Path to the mzML file used for searching. |
-| **`workflow_path`** | `string` | `/home/test_data/.../LFQ_DDA_human_noNQ.workflow` | **Input.** Path to the FragPipe workflow configuration file and the fasta path should be set in the workflow. |
-| **`manifest_path`** | `string` | `/home/test_data/.../fragpipe-files.fp-manifest` | **Output.** Path for the FragPipe temporary manifest output file. |
+| **`data_path`** | `string` | `/home/test_data/DDA_ingel_3D.mzML` | **Input.** Path to the mzML file used for searching. |
+| **`workflow_path`** | `string` | `/home/test_data/LFQ_DDA_human_noNQ.workflow` | **Input.** Path to the FragPipe workflow configuration file and the fasta path should be set in the workflow. |
+| **`manifest_path`** | `string` | `/home/test_data/fragpipe-files.fp-manifest` | **Output.** Path for the FragPipe temporary manifest output file. |
 | **`thread_num`** | `integer` | `10` | The number of CPU threads to use for the FragPipe search process. |
 
 ---
