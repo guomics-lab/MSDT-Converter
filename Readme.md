@@ -180,11 +180,11 @@ Enrich a FragPipe-derived MSDT Parquet file with the Percolator `score`, `q-valu
 
 ```bash
 python convert.py enrich \
-  --file-list "/mnt/e/data/massnet-dda-convert/test/run1/file.txt" \
+  --file-list "/mnt/data/massnet-dda-convert/test/run1/file.txt" \
   --data_type "mzml" \
-  --workdir "/mnt/e/data/massnet-dda-convert/test/run4/results" \
-  --fasta "/mnt/e/data/massnet-dda-convert/test/run1/Homo_sapiens_reviewed.fasta" \
-  --workflow workflows/Default-v2.workflow \
+  --workdir "/mnt/data/massnet-dda-convert/test/results" \
+  --fasta "/mnt/data/massnet-dda-convert/test/Homo_sapiens_reviewed.fasta" \
+  --workflow workflows/Default.workflow \
   --threads 10
 ```
 
@@ -195,78 +195,6 @@ When the TSVs came from a global Percolator run, select target PSMs at 1% FDR wh
 ```bash
 python convert.py enrich ... --run-id sample --global-fdr 0.01
 ```
-
-### Build a WIFF FP-Derived MSDT
-
-The Linux extractors cannot read the proprietary SCIEX `.wiff/.wiff.scan` pair directly. Convert the pair to mzML first with a SCIEX-compatible converter (for example ProteoWizard/MSConvert on a supported Windows installation), then pass that mzML together with the WIFF-native raw-spectrum Parquet, FragPipe PIN, and Percolator TSV files:
-
-```bash
-python convert.py fp-msdt \
-  --instrument wiff \
-  --wiff-mzml sample.mzML \
-  --raw-spectrum sample_rawspectrum.parquet \
-  --pin sample_edited.pin \
-  --target-tsv sample_percolator_target_psms.tsv \
-  --decoy-tsv sample_percolator_decoy_psms.tsv \
-  --output sample_fp_wiff_msdt.parquet
-```
-
-The converter cross-validates the WIFF-native SCIEX IDs and the raw-spectrum Parquet position with retention time and precursor m/z. FragPipe's `ScanNr` is the 1-based mzML spectrum index, so it is matched to the Parquet's 0-based `scan` as `ScanNr = scan + 1`; SCIEX `cycle` is never used alone because it is not unique. A row-count, ordering, RT, or precursor-m/z mismatch stops conversion instead of silently assigning the wrong native scan.
-
-### Batch FragPipe Search
-
-Run a FragPipe search over multiple files with a file list. The short format contains one input path per line:
-
-```text
-/data/sample01.mzML
-/data/sample02.mzML
-```
-
-The official four-column FragPipe manifest format is also accepted:
-
-```text
-/data/sample01.mzML	control	1	DDA
-/data/sample02.mzML	treatment	2	DDA
-```
-
-Run the batch search with:
-
-```bash
-python convert.py fp-search \
-  --file-list file_list.tsv \
-  --workdir results \
-  --fasta database.fasta \
-  --workflow workflows/Default-v2.workflow \
-  --threads 20
-```
-
-### True Global FDR
-
-Do not pool scores from separately trained Percolator models. Instead, combine compatible PIN files and run Percolator once:
-
-```bash
-python convert.py global-percolator \
-  --pin sample01=/results/sample01_edited.pin \
-  --pin sample02=/results/sample02_edited.pin \
-  --percolator-exe /path/to/percolator \
-  --output-dir /results/global_percolator \
-  --threads 20
-```
-
-Each PIN must have the same feature header and `DefaultDirection`. The converter prefixes every PSM identifier with its run ID and remaps `(run_id, ScanNr)` to a globally unique spectrum number before running Percolator. All candidates from the same spectrum retain the same remapped number. It then writes global target/decoy TSVs and later filters each run before checking per-run `psm_id` uniqueness. `config_global_fdr.example.json` shows the equivalent JSON configuration.
-
-### FragPipe Workflow Handling
-
-FragPipe workflows used by the converter are copied into the result directory, and the copy is forced to contain:
-
-```text
-percolator.run-percolator=true
-percolator.keep-tsv-files=true
-```
-
-The source workflow is never overwritten. The repository also ships `workflows/Default-v2.workflow`, based on the FragPipe 21.1 default workflow with both Percolator settings enabled.
-
-The two MSBooster-derived PIN features `unweighted_spectral_entropy` and `delta_RT_loess` are optional. If a valid FragPipe workflow does not emit them, the converter keeps the output columns and fills them with null values.
 
 ---
 
