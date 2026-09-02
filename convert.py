@@ -24,6 +24,7 @@ from scripts.percolator import (
 from scripts.search_engine import (
     generate_fp_search_result_fn,
     generate_sage_search_result_fn,
+    read_file_list
 )
 from scripts.msdt2mgf import msdt2mgf
 
@@ -239,6 +240,63 @@ def _add_run_id_argument(command_parser: argparse.ArgumentParser) -> None:
     )
 
 
+def _enrich_one(each_file_path, args):
+    base_file_name = os.path.basename(each_file_path).removesuffix('.mzML')
+    file_work_dir = os.path.join(args.workdir, base_file_name)
+    os.makedirs(file_work_dir, exist_ok=True)
+    rawspectrum_parquet = os.path.join(file_work_dir, base_file_name + "_rawspectrum.parquet")
+    target_tsv = os.path.join(file_work_dir, 'exp', base_file_name + "_percolator_target_psms.tsv")
+    decoy_tsv = os.path.join(file_work_dir, 'exp', base_file_name + "_percolator_decoy_psms.tsv")
+    final_output_file = os.path.join(file_work_dir, base_file_name + "_fp_msdt_v2.parquet")
+    pin_file = os.path.join(file_work_dir, 'exp', base_file_name + "_edited.pin")
+
+    generate_rawspectrum_fn_param = {
+        "data_type": args.data_type,
+        "input": each_file_path,
+        "output": rawspectrum_parquet,
+    }
+    generate_rawspectrum_fn(generate_rawspectrum_fn_param)
+    generate_fp_search_result_fn(
+        {
+            "data_path": each_file_path,
+            "workdir": file_work_dir,
+            "fasta_path": args.fasta,
+            "workflow_path": args.workflow,
+            "thread_num": args.threads,
+        }
+    )
+    common = {
+        "run_id": args.run_id,
+        "fdr_threshold": args.global_fdr,
+    }
+    if args.data_type == 'wiff2mzml':
+        gen_wiff_fragpipe_msdt(
+            rawspectrum_parquet,
+            each_file_path,
+            pin_file,
+            target_tsv,
+            decoy_tsv,
+            final_output_file,
+            True,
+            **common,
+        )
+    else:
+        gen_mzml_fragpipe_msdt(
+            rawspectrum_parquet,
+            pin_file,
+            final_output_file,
+            True,
+            target_tsv,
+            decoy_tsv,
+            **common,
+        )
+
+
+def _read_file_list(txt_path):
+    with open(txt_path, 'r', encoding='utf-8') as f:
+        lines = f.readlines()
+    return [n.strip() for n in lines]
+
 def create_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="MSDT-Converter v2")
     parser.add_argument(
@@ -253,17 +311,10 @@ def create_parser() -> argparse.ArgumentParser:
     _add_global_fdr_argument(run)
     run.add_argument("--percolator-exe")
 
-    search = commands.add_parser("fp-search", help="run batch FragPipe search")
-    search.add_argument("--file-list", required=True)
-    search.add_argument("--workdir", required=True)
-    search.add_argument("--fasta", required=True)
-    search.add_argument("--workflow", required=True)
-    search.add_argument("--threads", type=int, default=1)
-
     enrich = commands.add_parser(
         "enrich", help="add Percolator fields to an FP MSDT Parquet"
     )
-    enrich.add_argument("--file", required=True)
+    enrich.add_argument("--file-list", required=True)
     enrich.add_argument("--data_type", required=True)
     enrich.add_argument("--workdir", required=True)
     enrich.add_argument("--fasta", required=True)
@@ -271,35 +322,8 @@ def create_parser() -> argparse.ArgumentParser:
     enrich.add_argument("--threads", type=int, default=1)
     _add_run_id_argument(enrich)
     _add_global_fdr_argument(enrich)
+    enrich.add_argument("--no-unify-residue", action="store_true")
 
-    build = commands.add_parser("fp-msdt", help="build an FP-derived MSDT")
-    build.add_argument("--instrument", choices=("mzml", "wiff"), required=True)
-    build.add_argument("--raw-spectrum", required=True)
-    build.add_argument("--pin", required=True)
-    build.add_argument("--target-tsv", required=True)
-    build.add_argument("--decoy-tsv", required=True)
-    build.add_argument("--output", required=True)
-    build.add_argument(
-        "--wiff-mzml",
-        help=(
-            "mzML converted from the SCIEX .wiff/.wiff.scan pair; "
-            "native WIFF conversion is performed outside this Linux tool"
-        ),
-    )
-    _add_run_id_argument(build)
-    _add_global_fdr_argument(build)
-    build.add_argument("--no-unify-residue", action="store_true")
-
-    global_command = commands.add_parser(
-        "global-percolator",
-        help="pool PINs, remap cross-run ScanNr values, and run Percolator once",
-    )
-    global_command.add_argument(
-        "--pin", action="append", required=True, metavar="RUN_ID=PATH"
-    )
-    global_command.add_argument("--percolator-exe", required=True)
-    global_command.add_argument("--output-dir", required=True)
-    global_command.add_argument("--threads", type=int, default=1)
     return parser
 
 
@@ -315,109 +339,17 @@ def main(argv: Sequence[str] | None = None) -> int:
                 global_fdr=args.global_fdr,
                 percolator_executable=args.percolator_exe,
             )
-        if args.command == "fp-search":
-            state = generate_fp_search_result_fn(
-                {
-                    "file_list": args.file_list,
-                    "workdir": args.workdir,
-                    "fasta_path": args.fasta,
-                    "workflow_path": args.workflow,
-                    "thread_num": args.threads,
-                }
-            )
-            return 0 if state in (0, 1) else 1
+
         if args.command == "enrich":
-
-            base_file_name = os.path.basename(args.file).removesuffix('.mzML')
-            rawspectrum_parquet = os.path.join(args.workdir, base_file_name + "_rawspectrum.parquet")
-            target_tsv = os.path.join(args.workdir, 'exp', base_file_name + "_percolator_target_psms.tsv")
-            decoy_tsv = os.path.join(args.workdir, 'exp', base_file_name + "_percolator_decoy_psms.tsv")
-            final_output_file = os.path.join(args.workdir, base_file_name + "_fp_msdt_v2.parquet")
-            pin_file = os.path.join(args.workdir, 'exp', base_file_name + "_edited.pin")
-
-            generate_rawspectrum_fn_param = {
-                "data_type": args.data_type,
-                "input": args.file,
-                "output": rawspectrum_parquet,
-            }
-            generate_rawspectrum_fn(generate_rawspectrum_fn_param)
-
-            generate_fp_search_result_fn(
-                {
-                    "data_path": args.file,
-                    "workdir": args.workdir,
-                    "fasta_path": args.fasta,
-                    "workflow_path": args.workflow,
-                    "thread_num": args.threads,
-                }
-            )
-            common = {
-                "run_id": args.run_id,
-                "fdr_threshold": args.global_fdr,
-            }
-
-            if args.data_type == 'wiff2mzml':
-                if not args.wiff_mzml:
-                    parser.error("fp-msdt --instrument wiff requires --wiff-mzml")
-                gen_wiff_fragpipe_msdt(
-                    rawspectrum_parquet,
-                    args.file,
-                    pin_file,
-                    target_tsv,
-                    decoy_tsv,
-                    final_output_file,
-                    True,
-                    **common,
-                )
-            else:
-                gen_mzml_fragpipe_msdt(
-                    rawspectrum_parquet,
-                    pin_file,
-                    final_output_file,
-                    True,
-                    target_tsv,
-                    decoy_tsv,
-                    **common,
-                )
+            file_list = _read_file_list(args.file_list)
+            for abs_file_path in file_list:
+                try:
+                    _enrich_one(abs_file_path, args)
+                except:
+                    logger.exception(f"enrich file {abs_file_path} error")
 
             return 0
-        if args.command == "fp-msdt":
-            common = {
-                "run_id": args.run_id,
-                "fdr_threshold": args.global_fdr,
-            }
-            if args.instrument == "wiff":
-                if not args.wiff_mzml:
-                    parser.error("fp-msdt --instrument wiff requires --wiff-mzml")
-                state = gen_wiff_fragpipe_msdt(
-                    args.raw_spectrum,
-                    args.wiff_mzml,
-                    args.pin,
-                    args.target_tsv,
-                    args.decoy_tsv,
-                    args.output,
-                    not args.no_unify_residue,
-                    **common,
-                )
-            else:
-                state = gen_mzml_fragpipe_msdt(
-                    args.raw_spectrum,
-                    args.pin,
-                    args.output,
-                    not args.no_unify_residue,
-                    args.target_tsv,
-                    args.decoy_tsv,
-                    **common,
-                )
-            return 0 if state in (0, 1) else 1
-        if args.command == "global-percolator":
-            run_global_percolator(
-                _pin_mapping(args.pin),
-                args.percolator_exe,
-                args.output_dir,
-                threads=args.threads,
-            )
-            return 0
+
         if args.legacy_config:
             return run_config(args.legacy_config)
         parser.print_help()
