@@ -164,6 +164,16 @@ chmod -R 775 .
 ### Run the script
 > **⚠️Note**: Before running the script, please download [test data and configs](https://drive.google.com/drive/folders/1gZnnue6BFuv6rowjXCX3NC_ug8cr2Pkn?usp=drive_link) to the root directory.
 
+```bash
+python convert.py enrich \
+  --file-list "/test/run1/file.txt" \
+  --data_type "mzml" \
+  --workdir "/test/results" \
+  --fasta "/test/Homo_sapiens_reviewed.fasta" \
+  --workflow workflows/Default.workflow \
+  --threads 10
+```
+
 `--file-list` defines the input files for batch processing and supports two formats.
 
 One file path per line:
@@ -178,16 +188,6 @@ Or the standard four-column FragPipe manifest format:
 ```
 /data/sample01.mzML	control	1	DDA
 /data/sample02.mzML	treatment	2	DDA
-```
-
-```bash
-python convert.py enrich \
-  --file-list "/test/run1/file.txt" \
-  --data_type "mzml" \
-  --workdir "/test/results" \
-  --fasta "/test/Homo_sapiens_reviewed.fasta" \
-  --workflow workflows/Default.workflow \
-  --threads 10
 ```
 
 ---
