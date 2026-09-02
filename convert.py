@@ -299,6 +299,7 @@ def _read_file_list(txt_path):
 
 def create_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="MSDT-Converter v2")
+    parser.add_argument('--version', action='version', version='v2.0')
     parser.add_argument(
         "-config", "--config", dest="legacy_config", help="legacy config JSON"
     )

@@ -166,10 +166,10 @@ chmod -R 775 .
 
 ```bash
 python convert.py enrich \
-  --file-list "/mnt/data/massnet-dda-convert/test/run1/file.txt" \
+  --file-list "/test/run1/file.txt" \
   --data_type "mzml" \
-  --workdir "/mnt/data/massnet-dda-convert/test/results" \
-  --fasta "/mnt/data/massnet-dda-convert/test/Homo_sapiens_reviewed.fasta" \
+  --workdir "/test/results" \
+  --fasta "/test/Homo_sapiens_reviewed.fasta" \
   --workflow workflows/Default.workflow \
   --threads 10
 ```
