@@ -27,7 +27,7 @@ For more detailed information on the MSDT format, including its schema and desig
 
 ---
 
-# 📥 Getting the Test Data and Configurations (Google Drive)
+# 📥 Getting the Test Data and Configurations
 
 We provide test datasets from **Thermo, SCIEX, and Bruker platforms, covering mzML, .d, and MGF formats**, together with configuration files for the FragPipe and Sage search engines and the corresponding converted MSDT files.
 
@@ -165,20 +165,6 @@ chmod -R 775 .
 > **⚠️Note**: Before running the script, please download [test data and configs](https://drive.google.com/drive/folders/1gZnnue6BFuv6rowjXCX3NC_ug8cr2Pkn?usp=drive_link) to the root directory.
 
 ```bash
-python convert.py -config=/home/test_data/config.json
-```
-
----
-
-## 🧰 Command-Line Tools
-
-In addition to the JSON-configuration workflow, the converter provides dedicated subcommands for common tasks.
-
-### Enrich an Existing FP Parquet
-
-Enrich a FragPipe-derived MSDT Parquet file with the Percolator `score`, `q-value`, and `PEP` fields:
-
-```bash
 python convert.py enrich \
   --file-list "/mnt/data/massnet-dda-convert/test/run1/file.txt" \
   --data_type "mzml" \
@@ -186,14 +172,6 @@ python convert.py enrich \
   --fasta "/mnt/data/massnet-dda-convert/test/Homo_sapiens_reviewed.fasta" \
   --workflow workflows/Default.workflow \
   --threads 10
-```
-
-Matching between the Parquet rows and the Percolator PSMs is performed with the per-run key `scan + charge + modified_sequence`. Duplicate keys, missing matches, and target/decoy label conflicts stop the conversion instead of silently duplicating or dropping rows.
-
-When the TSVs came from a global Percolator run, select target PSMs at 1% FDR while retaining decoys with:
-
-```bash
-python convert.py enrich ... --run-id sample --global-fdr 0.01
 ```
 
 ---
