@@ -174,7 +174,7 @@ python convert.py enrich \
   --threads 10
 ```
 
-`--file-list` defines the input files for batch processing and supports two formats.
+`--file-list` defines the input files for batch processing and supports two formats：
 
 1. One file path per line:
 
