@@ -128,51 +128,8 @@ def execute_steps(steps: dict) -> int:
             generate_fp_search_result_fn(steps["generate_fragpipe_search_result"])
         )
 
-    global_artifacts = None
-    global_options = steps.get("global_percolator")
-    if global_options:
-        pin_files = global_options.get("pin_files")
-        if not isinstance(pin_files, dict) or not pin_files:
-            raise ValueError(
-                "global_percolator.pin_files must map run_id to PIN path"
-            )
-        global_artifacts = run_global_percolator(
-            pin_files,
-            global_options["percolator_executable"],
-            global_options["output_dir"],
-            threads=int(global_options.get("threads", 1)),
-        )
-
     if "generate_msdt" in steps:
         msdt_params = copy.deepcopy(steps["generate_msdt"])
-        if global_artifacts is not None:
-            threshold = global_options.get("fdr_threshold")
-            for data_type in ("mzml", "wiff"):
-                params = msdt_params.get(data_type, {})
-                if params.get("need_fragpipe", False):
-                    params["percolator_target_path"] = str(
-                        global_artifacts.target_tsv
-                    )
-                    params["percolator_decoy_path"] = str(
-                        global_artifacts.decoy_tsv
-                    )
-                    params["fdr_threshold"] = threshold
-                    if not params.get("fp_pin_path"):
-                        raise ValueError(
-                            f"generate_msdt.{data_type}.fp_pin_path is required "
-                            "for global FDR"
-                        )
-                    mapped_run_id = _resolve_global_run_id(
-                        params["fp_pin_path"], pin_files
-                    )
-                    configured_run_id = params.get("run_id")
-                    if configured_run_id and configured_run_id != mapped_run_id:
-                        raise ValueError(
-                            f"generate_msdt.{data_type}.run_id "
-                            f"({configured_run_id}) does not match the global PIN "
-                            f"mapping key ({mapped_run_id})"
-                        )
-                    params["run_id"] = mapped_run_id
         states.append(generate_msdt_fn(msdt_params))
     if "convert_2_msdt" in steps:
         states.append(mgf_to_parquet(steps["convert_2_msdt"]["mgf"]))
@@ -186,8 +143,6 @@ def run_config(
     *,
     file_list: str | None = None,
     threads: int | None = None,
-    global_fdr: float | None = None,
-    percolator_executable: str | None = None,
 ) -> int:
     """Run a JSON workflow with optional command-line overrides."""
     config = load_config(config_path)
@@ -197,16 +152,6 @@ def run_config(
         fragpipe.pop("data_path", None)
     if threads is not None:
         fragpipe["thread_num"] = threads
-    if global_fdr is not None:
-        global_options = config.get("global_percolator")
-        if not global_options:
-            raise ValueError(
-                "--global-fdr requires a global_percolator section in the config"
-            )
-        global_options["need"] = True
-        global_options["fdr_threshold"] = global_fdr
-        if percolator_executable is not None:
-            global_options["percolator_executable"] = percolator_executable
     return execute_steps(parse_config(config))
 
 
@@ -220,14 +165,6 @@ def _pin_mapping(values: list[str]) -> dict[str, str]:
             raise ValueError(f"Invalid or duplicate --pin value: {value}")
         mapping[run_id] = path
     return mapping
-
-
-def _add_global_fdr_argument(command_parser: argparse.ArgumentParser) -> None:
-    command_parser.add_argument(
-        "--global-fdr",
-        type=float,
-        help="target q-value threshold; all decoy PSMs are retained",
-    )
 
 
 def _add_run_id_argument(command_parser: argparse.ArgumentParser) -> None:
@@ -267,7 +204,6 @@ def _enrich_one(each_file_path, args):
     )
     common = {
         "run_id": args.run_id,
-        "fdr_threshold": args.global_fdr,
     }
     if args.data_type == 'wiff2mzml':
         gen_wiff_fragpipe_msdt(
@@ -309,8 +245,6 @@ def create_parser() -> argparse.ArgumentParser:
     run.add_argument("--config", required=True)
     run.add_argument("--file-list")
     run.add_argument("--threads", type=int)
-    _add_global_fdr_argument(run)
-    run.add_argument("--percolator-exe")
 
     enrich = commands.add_parser(
         "enrich", help="add Percolator fields to an FP MSDT Parquet"
@@ -322,8 +256,6 @@ def create_parser() -> argparse.ArgumentParser:
     enrich.add_argument("--workflow", required=True)
     enrich.add_argument("--threads", type=int, default=1)
     _add_run_id_argument(enrich)
-    _add_global_fdr_argument(enrich)
-    enrich.add_argument("--no-unify-residue", action="store_true")
 
     return parser
 
@@ -337,8 +269,6 @@ def main(argv: Sequence[str] | None = None) -> int:
                 args.config,
                 file_list=args.file_list,
                 threads=args.threads,
-                global_fdr=args.global_fdr,
-                percolator_executable=args.percolator_exe,
             )
 
         if args.command == "enrich":
