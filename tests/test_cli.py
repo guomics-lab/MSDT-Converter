@@ -102,8 +102,6 @@ class CliTests(unittest.TestCase):
                     str(decoy),
                     "--output",
                     str(output),
-                    "--global-fdr",
-                    "0.01",
                 ]
             )
 
