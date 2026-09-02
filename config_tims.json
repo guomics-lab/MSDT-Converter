@@ -2,33 +2,33 @@
     "generate_rawspectrum": {
         "need": true,
         "data_type": "tims",
-        "data_path": "/storage/guotiannanLab/ajun/SFM/MassNet/MSDT-Converter/1_generate_rawspectrum/2021-10-26_Gabriel_29_PaSER_dda_30SPD_S1-C9_1_3176.d",
-        "output": "/storage/guotiannanLab/ajun/SFM/MassNet/MSDT-Converter/1_generate_rawspectrum/2021-10-26_Gabriel_29_PaSER_dda_30SPD_S1-C9_1_3176_rawspectrum.parquet"
+        "data_path": "/MSDT-Converter/1_generate_rawspectrum/example.d",
+        "output": "/MSDT-Converter/1_generate_rawspectrum/example_rawspectrum.parquet"
     },
     "generate_sage_search_result": {
         "need": true,
-        "workdir": "/storage/guotiannanLab/ajun/SFM/MassNet/MSDT-Converter/2_generate_sage_search_result/tims",
-        "fasta": "/storage/guotiannanLab/ajun/SFM/MassNet/MSDT-Converter/2_generate_sage_search_result/Homo_sapiens_reviewed.fasta",
-        "data_path": "/storage/guotiannanLab/ajun/SFM/MassNet/MSDT-Converter/1_generate_rawspectrum/2021-10-26_Gabriel_29_PaSER_dda_30SPD_S1-C9_1_3176.d",
-        "config_path": "/storage/guotiannanLab/ajun/SFM/MassNet/MSDT-Converter/2_generate_sage_search_result/sage_config.json"
+        "workdir": "/MSDT-Converter/2_generate_sage_search_result/tims",
+        "fasta": "/MSDT-Converter/2_generate_sage_search_result/Homo_sapiens_reviewed.fasta",
+        "data_path": "/MSDT-Converter/1_generate_rawspectrum/example.d",
+        "config_path": "/MSDT-Converter/2_generate_sage_search_result/sage_config.json"
     },
     "generate_fragpipe_search_result": {
         "need": true,
-        "workdir": "/storage/guotiannanLab/ajun/SFM/MassNet/MSDT-Converter/3_generate_fragpipe_search_result/tims",
-        "data_path": "/storage/guotiannanLab/ajun/SFM/MassNet/MSDT-Converter/1_generate_rawspectrum/2021-10-26_Gabriel_29_PaSER_dda_30SPD_S1-C9_1_3176.d",
-        "fasta_path": "/storage/guotiannanLab/ajun/SFM/MassNet/MSDT-Converter/2_generate_sage_search_result/Homo_sapiens_reviewed.fasta",
-        "workflow_path": "/storage/guotiannanLab/ajun/SFM/MassNet/MSDT-Converter/3_generate_fragpipe_search_result/LFQ_DDA_human_noNQ_tims.workflow",
-        "manifest_path": "/storage/guotiannanLab/ajun/SFM/MassNet/MSDT-Converter/3_generate_fragpipe_search_result/tims/fragpipe-files.fp-manifest",
+        "workdir": "/MSDT-Converter/3_generate_fragpipe_search_result/tims",
+        "data_path": "/MSDT-Converter/1_generate_rawspectrum/example.d",
+        "fasta_path": "/MSDT-Converter/2_generate_sage_search_result/Homo_sapiens_reviewed.fasta",
+        "workflow_path": "/MSDT-Converter/3_generate_fragpipe_search_result/tims.workflow",
+        "manifest_path": "/MSDT-Converter/3_generate_fragpipe_search_result/tims/fragpipe-files.fp-manifest",
         "thread_num": 10
     },
     "generate_msdt": {
         "need": true,
         "tims": {
             "need_tims":true,
-            "rawspectrum_path": "/storage/guotiannanLab/ajun/SFM/MassNet/MSDT-Converter/1_generate_rawspectrum/2021-10-26_Gabriel_29_PaSER_dda_30SPD_S1-C9_1_3176_rawspectrum.parquet",
-            "sage_search_result_path": "/storage/guotiannanLab/ajun/SFM/MassNet/MSDT-Converter/2_generate_sage_search_result/tims/2021-10-26_Gabriel_29_PaSER_dda_30SPD_S1-C9_1_3176_search_result.tsv",
+            "rawspectrum_path": "/MSDT-Converter/1_generate_rawspectrum/example_rawspectrum.parquet",
+            "sage_search_result_path": "/MSDT-Converter/2_generate_sage_search_result/tims/example_search_result.tsv",
             "unify_residue": true,
-            "output": "/storage/guotiannanLab/ajun/SFM/MassNet/MSDT-Converter/4_generate_msdt/2021-10-26_Gabriel_29_PaSER_dda_30SPD_S1-C9_1_3176_sage_msdt.parquet"
+            "output": "/MSDT-Converter/4_generate_msdt/example_sage_msdt.parquet"
         },
         "mzml": {
             "need_mzml": false,
@@ -54,8 +54,8 @@
     "convert_2_msdt": {
         "mgf": {
             "need": false,
-            "mgf_path": "/storage/guotiannanLab/ajun/SFM/MassNet/MSDT-Converter/5_convert_2_msdt/180624_G12.mzid_180624_G12.MGF",
-            "output_path": "/storage/guotiannanLab/ajun/SFM/MassNet/MSDT-Converter/5_convert_2_msdt/180624_G12.mzid_180624_G12.parquet",
+            "mgf_path": "/MSDT-Converter/5_convert_2_msdt/example.MGF",
+            "output_path": "/MSDT-Converter/5_convert_2_msdt/example.parquet",
             "field_type_dict": {
                 "TITLE": "string",
                 "PEPMASS": "float",
@@ -67,7 +67,7 @@
     },
     "msdt_2_mgf": {
         "need": true,
-        "msdt_path": "/storage/guotiannanLab/ajun/SFM/MassNet/MSDT-Converter/4_generate_msdt/2021-10-26_Gabriel_29_PaSER_dda_30SPD_S1-C9_1_3176_sage_msdt.parquet",
-        "output_path": "/storage/guotiannanLab/ajun/SFM/MassNet/MSDT-Converter/6_msdt_2_mgf/2021-10-26_Gabriel_29_PaSER_dda_30SPD_S1-C9_1_3176_sage.mgf"
+        "msdt_path": "/MSDT-Converter/4_generate_msdt/example_sage_msdt.parquet",
+        "output_path": "/MSDT-Converter/6_msdt_2_mgf/example_sage.mgf"
     }
 }

@@ -17,14 +17,9 @@ from scripts.generate_msdt import (
     generate_msdt_fn,
 )
 from scripts.mgf2parquet import mgf_to_parquet
-from scripts.percolator import (
-    enrich_parquet_with_percolator,
-    run_global_percolator,
-)
 from scripts.search_engine import (
     generate_fp_search_result_fn,
-    generate_sage_search_result_fn,
-    read_file_list
+    generate_sage_search_result_fn
 )
 from scripts.msdt2mgf import msdt2mgf
 
@@ -74,9 +69,7 @@ def parse_config(config: dict) -> dict:
     fragpipe = config.get("generate_fragpipe_search_result", {})
     if fragpipe.get("need", False):
         steps["generate_fragpipe_search_result"] = fragpipe
-    global_percolator = config.get("global_percolator", {})
-    if global_percolator.get("need", False):
-        steps["global_percolator"] = global_percolator
+
     msdt = config.get("generate_msdt", {})
     if msdt.get("need", False):
         steps["generate_msdt"] = {
@@ -91,25 +84,6 @@ def parse_config(config: dict) -> dict:
     if to_mgf.get("need", False):
         steps["msdt2mgf"] = to_mgf
     return steps
-
-
-def _resolve_global_run_id(
-    pin_path: str | Path, pin_files: dict[str, str | Path]
-) -> str:
-    """Resolve a PIN to the exact run ID used to prefix the global PIN."""
-    requested = Path(pin_path).expanduser().resolve(strict=False)
-    matches = [
-        run_id
-        for run_id, candidate in pin_files.items()
-        if Path(candidate).expanduser().resolve(strict=False) == requested
-    ]
-    if len(matches) != 1:
-        raise ValueError(
-            f"PIN path {pin_path} must occur exactly once in "
-            "global_percolator.pin_files"
-        )
-    return matches[0]
-
 
 def execute_steps(steps: dict) -> int:
     """Execute configured steps and return a process-style exit code."""
@@ -165,16 +139,6 @@ def _pin_mapping(values: list[str]) -> dict[str, str]:
             raise ValueError(f"Invalid or duplicate --pin value: {value}")
         mapping[run_id] = path
     return mapping
-
-
-def _add_run_id_argument(command_parser: argparse.ArgumentParser) -> None:
-    command_parser.add_argument(
-        "--run-id",
-        help=(
-            "run key used only with pooled global-Percolator TSVs whose "
-            "PSMId values start with RUN_ID::; omit for per-run TSVs"
-        ),
-    )
 
 
 def _enrich_one(each_file_path, args):
@@ -255,7 +219,6 @@ def create_parser() -> argparse.ArgumentParser:
     enrich.add_argument("--fasta", required=True)
     enrich.add_argument("--workflow", required=True)
     enrich.add_argument("--threads", type=int, default=1)
-    _add_run_id_argument(enrich)
 
     return parser
 

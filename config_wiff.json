@@ -2,23 +2,23 @@
     "generate_rawspectrum": {
         "need": true,
         "data_type": "wiff2mzml",
-        "data_path": "/storage/guotiannanLab/ajun/SFM/MassNet/MSDT-Converter/1_generate_rawspectrum/G20220522caix_GNHSU_lib_90min_IDA_18.mzML",
-        "output": "/storage/guotiannanLab/ajun/SFM/MassNet/MSDT-Converter/1_generate_rawspectrum/G20220522caix_GNHSU_lib_90min_IDA_18_rawspectrum.parquet"
+        "data_path": "/MSDT-Converter/1_generate_rawspectrum/wiff_example.mzML",
+        "output": "/MSDT-Converter/1_generate_rawspectrum/wiff_example_rawspectrum.parquet"
     },
     "generate_sage_search_result": {
         "need": true,
-        "workdir": "/storage/guotiannanLab/ajun/SFM/MassNet/MSDT-Converter/2_generate_sage_search_result/wiff",
-        "fasta": "/storage/guotiannanLab/ajun/SFM/MassNet/MSDT-Converter/2_generate_sage_search_result/Homo_sapiens_reviewed.fasta",
-        "data_path": "/storage/guotiannanLab/ajun/SFM/MassNet/MSDT-Converter/1_generate_rawspectrum/G20220522caix_GNHSU_lib_90min_IDA_18.mzML",
-        "config_path": "/storage/guotiannanLab/ajun/SFM/MassNet/MSDT-Converter/2_generate_sage_search_result/sage_config.json"
+        "workdir": "/MSDT-Converter/2_generate_sage_search_result/wiff",
+        "fasta": "/MSDT-Converter/2_generate_sage_search_result/Homo_sapiens_reviewed.fasta",
+        "data_path": "/MSDT-Converter/1_generate_rawspectrum/wiff_example.mzML",
+        "config_path": "/MSDT-Converter/2_generate_sage_search_result/sage_config.json"
     },
     "generate_fragpipe_search_result": {
         "need": true,
-        "workdir": "/storage/guotiannanLab/ajun/SFM/MassNet/MSDT-Converter/3_generate_fragpipe_search_result/wiff",
-        "data_path": "/storage/guotiannanLab/ajun/SFM/MassNet/MSDT-Converter/1_generate_rawspectrum/G20220522caix_GNHSU_lib_90min_IDA_18.mzML",
-        "fasta_path": "/storage/guotiannanLab/ajun/SFM/MassNet/MSDT-Converter/2_generate_sage_search_result/Homo_sapiens_reviewed.fasta",
-        "workflow_path": "workflows/Default-v2.workflow",
-        "manifest_path": "/storage/guotiannanLab/ajun/SFM/MassNet/MSDT-Converter/3_generate_fragpipe_search_result/wiff/fragpipe-files.fp-manifest",
+        "workdir": "/MSDT-Converter/3_generate_fragpipe_search_result/wiff",
+        "data_path": "/MSDT-Converter/1_generate_rawspectrum/wiff_example.mzML",
+        "fasta_path": "/MSDT-Converter/2_generate_sage_search_result/Homo_sapiens_reviewed.fasta",
+        "workflow_path": "workflows/Default.workflow",
+        "manifest_path": "/MSDT-Converter/3_generate_fragpipe_search_result/wiff/fragpipe-files.fp-manifest",
         "thread_num": 10
     },
     "generate_msdt": {
@@ -46,24 +46,24 @@
             "need_wiff": true,
             "need_sage": true,
             "need_fragpipe": true,
-            "wiff_mzml_path": "/storage/guotiannanLab/ajun/SFM/MassNet/MSDT-Converter/1_generate_rawspectrum/G20220522caix_GNHSU_lib_90min_IDA_18.mzML",
-            "rawspectrum_path": "/storage/guotiannanLab/ajun/SFM/MassNet/MSDT-Converter/1_generate_rawspectrum/G20220522caix_GNHSU_lib_90min_IDA_18_rawspectrum.parquet",
-            "sage_search_result_path": "/storage/guotiannanLab/ajun/SFM/MassNet/MSDT-Converter/2_generate_sage_search_result/wiff/G20220522caix_GNHSU_lib_90min_IDA_18_search_result.tsv",
-            "fp_pin_path": "/storage/guotiannanLab/ajun/SFM/MassNet/MSDT-Converter/3_generate_fragpipe_search_result/wiff/exp/G20220522caix_GNHSU_lib_90min_IDA_18_edited.pin",
-            "percolator_target_path": "/storage/guotiannanLab/ajun/SFM/MassNet/MSDT-Converter/3_generate_fragpipe_search_result/wiff/exp/G20220522caix_GNHSU_lib_90min_IDA_18_percolator_target_psms.tsv",
-            "percolator_decoy_path": "/storage/guotiannanLab/ajun/SFM/MassNet/MSDT-Converter/3_generate_fragpipe_search_result/wiff/exp/G20220522caix_GNHSU_lib_90min_IDA_18_percolator_decoy_psms.tsv",
+            "wiff_mzml_path": "/MSDT-Converter/1_generate_rawspectrum/wiff_example.mzML",
+            "rawspectrum_path": "/MSDT-Converter/1_generate_rawspectrum/wiff_example_rawspectrum.parquet",
+            "sage_search_result_path": "/MSDT-Converter/2_generate_sage_search_result/wiff/wiff_example_search_result.tsv",
+            "fp_pin_path": "/MSDT-Converter/3_generate_fragpipe_search_result/wiff/exp/wiff_example_edited.pin",
+            "percolator_target_path": "/MSDT-Converter/3_generate_fragpipe_search_result/wiff/exp/wiff_example_percolator_target_psms.tsv",
+            "percolator_decoy_path": "/MSDT-Converter/3_generate_fragpipe_search_result/wiff/exp/wiff_example_percolator_decoy_psms.tsv",
             "fdr_threshold": 0.01,
             "sage_unify_residue": true,
             "fp_unify_residue": true,
-            "sage_output": "/storage/guotiannanLab/ajun/SFM/MassNet/MSDT-Converter/4_generate_msdt/G20220522caix_GNHSU_lib_90min_IDA_18_sage_msdt.parquet",
-            "fp_output": "/storage/guotiannanLab/ajun/SFM/MassNet/MSDT-Converter/4_generate_msdt/G20220522caix_GNHSU_lib_90min_IDA_18_fp_msdt.parquet"
+            "sage_output": "/MSDT-Converter/4_generate_msdt/wiff_example_sage_msdt.parquet",
+            "fp_output": "/MSDT-Converter/4_generate_msdt/wiff_example_fp_msdt.parquet"
         }
     },
     "convert_2_msdt": {
         "mgf": {
             "need": false,
-            "mgf_path": "/storage/guotiannanLab/ajun/SFM/MassNet/MSDT-Converter/5_convert_2_msdt/180624_G12.mzid_180624_G12.MGF",
-            "output_path": "/storage/guotiannanLab/ajun/SFM/MassNet/MSDT-Converter/5_convert_2_msdt/180624_G12.mzid_180624_G12.parquet",
+            "mgf_path": "/MSDT-Converter/5_convert_2_msdt/example.MGF",
+            "output_path": "/MSDT-Converter/5_convert_2_msdt/example.parquet",
             "field_type_dict": {
                 "TITLE": "string",
                 "PEPMASS": "float",
@@ -75,7 +75,7 @@
     },
     "msdt_2_mgf": {
         "need": true,
-        "msdt_path": "/storage/guotiannanLab/ajun/SFM/MassNet/MSDT-Converter/4_generate_msdt/G20220522caix_GNHSU_lib_90min_IDA_18_sage_msdt.parquet",
-        "output_path": "/storage/guotiannanLab/ajun/SFM/MassNet/MSDT-Converter/6_msdt_2_mgf/G20220522caix_GNHSU_lib_90min_IDA_18_sage.mgf"
+        "msdt_path": "/MSDT-Converter/4_generate_msdt/wiff_example_sage_msdt.parquet",
+        "output_path": "/MSDT-Converter/6_msdt_2_mgf/wiff_example_sage.mgf"
     }
 }
