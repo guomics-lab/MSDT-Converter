@@ -176,14 +176,14 @@ python convert.py enrich \
 
 `--file-list` defines the input files for batch processing and supports two formats.
 
-One file path per line:
+1. One file path per line:
 
 ```text
 /data/sample01.mzML
 /data/sample02.mzML
 ```
 
-Or the standard four-column FragPipe manifest format:
+2. The standard four-column FragPipe manifest format:
 
 ```
 /data/sample01.mzML	control	1	DDA
