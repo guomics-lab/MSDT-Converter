@@ -161,7 +161,7 @@ After cloning the repository and completing the installation, run the following 
 chmod -R 775 .
 ```
 
-### Run the script:
+### Run the script
 > **⚠️Note**: Before running the script, please download [test data and configs](https://drive.google.com/drive/folders/1gZnnue6BFuv6rowjXCX3NC_ug8cr2Pkn?usp=drive_link) to the root directory.
 
 ```bash
