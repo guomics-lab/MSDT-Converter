@@ -255,17 +255,17 @@ This section contains nested configurations based on data type (`tims`, `mzml`, 
 | **`need_mzml`** | `boolean` | `true` | Set to `true` to generate MSDT from **mzML** related data. |
 | **`need_sage`** | `boolean` | `true` | Set to `true` to generate MSDT from **Sage** search results. |
 | **`need_fragpipe`** | `boolean` | `true` | Set to `true` to generate MSDT from **FragPipe** search results. |
-| **`rawspectrum_path`** | `string` | `/home/test_data/.../3D_rawspectrum.tsv` | **Input.** Path to the raw spectrum file. |
-| **`sage_search_result_path`** | `string` | `/home/test_data/.../D_search_result.tsv` | **Input.** Path to the Sage search result file. |
-| **`fp_pin_path`** | `string` | `/home/test_data/.../A18..._edited.pin` | **Input.** Path to the FragPipe `.pin` file. |
-| **`percolator_target_path`** | `string` | `/home/test_data/.../exp/..._target_psms.tsv` | **Input.** Percolator target PSM TSV from the same FragPipe result directory as the PIN. |
-| **`percolator_decoy_path`** | `string` | `/home/test_data/.../exp/..._decoy_psms.tsv` | **Input.** Percolator decoy PSM TSV from the same FragPipe result directory as the PIN. |
+| **`rawspectrum_path`** | `string` | `/home/test_data/3D_rawspectrum.tsv` | **Input.** Path to the raw spectrum file. |
+| **`sage_search_result_path`** | `string` | `/home/test_data/D_search_result.tsv` | **Input.** Path to the Sage search result file. |
+| **`fp_pin_path`** | `string` | `/home/test_data/A18..._edited.pin` | **Input.** Path to the FragPipe `.pin` file. |
+| **`percolator_target_path`** | `string` | `/home/test_data/exp/..._target_psms.tsv` | **Input.** Percolator target PSM TSV from the same FragPipe result directory as the PIN. |
+| **`percolator_decoy_path`** | `string` | `/home/test_data/exp/..._decoy_psms.tsv` | **Input.** Percolator decoy PSM TSV from the same FragPipe result directory as the PIN. |
 | **`run_id`** | `string` | `"sample01"` | Use only for pooled global-Percolator TSVs whose PSM IDs start with `sample01::`; omit for ordinary per-run TSVs. |
 | **`fdr_threshold`** | `number` | `0.01` | Optional q-value threshold for targets; all decoys are retained. |
 | **`sage_unify_residue`** | `boolean` | `true` | If `true`, Sage residue format converts to MSDT format. |
 | **`fp_unify_residue`** | `boolean` | `true` | If `true`, FragPipe residue format converts to MSDT format. |
-| **`sage_output`** | `string` | `/home/test_data/.../sage_msdt.parquet` | **Output.** Path for the generated Sage MSDT `.parquet` file. |
-| **`fp_output`** | `string` | `/home/test_data/.../fp_msdt.parquet` | **Output.** Path for the generated FragPipe MSDT `.parquet` file. |
+| **`sage_output`** | `string` | `/home/test_data/sage_msdt.parquet` | **Output.** Path for the generated Sage MSDT `.parquet` file. |
+| **`fp_output`** | `string` | `/home/test_data/fp_msdt.parquet` | **Output.** Path for the generated FragPipe MSDT `.parquet` file. |
 
 #### **4.3. `generate_msdt` -> `wiff`**
 
@@ -298,8 +298,8 @@ This section handles direct conversion from other data formats to MSDT.
 | Parameter | Data Type | Example Value | Description |
 | :--- | :--- | :--- | :--- |
 | **`need`** | `boolean` | `true` | Set to `true` to execute this MGF conversion step. |
-| **`mgf_path`** | `string` | `/home/test_data/.../180624_G12.MGF` | **Input.** Path to the MGF file to be converted. |
-| **`output_path`** | `string` | `/home/test_data/.../180624_G12.parquet` | **Output.** Path for the generated MSDT `.parquet` file. |
+| **`mgf_path`** | `string` | `/home/test_data/180624_G12.MGF` | **Input.** Path to the MGF file to be converted. |
+| **`output_path`** | `string` | `/home/test_data/180624_G12.parquet` | **Output.** Path for the generated MSDT `.parquet` file. |
 | **`field_type_dict`** | `object` | `{...}` | A dictionary defining the fields present in the MGF file and their corresponding data types. |
 
 > **`field_type_dict`** details:
@@ -319,8 +319,8 @@ This section handles direct conversion from other data formats to MSDT.
 | Parameter | Data Type | Example Value | Description |
 | :--- | :--- | :--- | :--- |
 | **`need`** | `boolean` | `true` | Set to `true` to execute this step (convert MSDT back to MGF). |
-| **`msdt_path`** | `string` | `/home/test_data/.../sage_msdt.parquet` | **Input.** Path to the MSDT `.parquet` file to be converted. |
-| **`output_path`** | `string` | `/home/test_data/.../sage.mgf` | **Output.** Path for the generated MGF file. |
+| **`msdt_path`** | `string` | `/home/test_data/sage_msdt.parquet` | **Input.** Path to the MSDT `.parquet` file to be converted. |
+| **`output_path`** | `string` | `/home/test_data/sage.mgf` | **Output.** Path for the generated MGF file. |
 
 ---
 
