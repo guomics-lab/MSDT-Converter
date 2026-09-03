@@ -167,7 +167,6 @@ def _enrich_one(each_file_path, args):
         }
     )
     common = {
-        "run_id": args.run_id,
     }
     if args.data_type == 'wiff2mzml':
         gen_wiff_fragpipe_msdt(
